@@ -285,6 +285,36 @@ export interface CourseCapacityResponse {
   availableSlots: number;
 }
 
+export interface CreateCourseDTO {
+  title: string;
+  code: string;
+  description: string;
+  danceType: DanceType;
+  level: DanceLevel;
+  pricePerHour: number;
+  durationHours: number;
+  maxCapacity: number;
+  teacherId: number;
+  imageUrl?: string;
+  prerequisites?: string;
+  objectives?: string;
+}
+
+export interface UpdateCourseDTO {
+  title?: string;
+  code?: string;
+  description?: string;
+  danceType?: DanceType;
+  level?: DanceLevel;
+  pricePerHour?: number;
+  durationHours?: number;
+  maxCapacity?: number;
+  teacherId?: number;
+  imageUrl?: string;
+  prerequisites?: string;
+  objectives?: string;
+}
+
 // ========================================
 // ESTUDIANTES
 // ========================================

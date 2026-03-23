@@ -1,0 +1,153 @@
+<div class="course-form-container">
+  <h2 mat-dialog-title>
+    <mat-icon>{{ isEditMode ? 'edit' : 'add' }}</mat-icon>
+    {{ isEditMode ? 'Editar Curso' : 'Nuevo Curso' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="courseForm" class="course-form">
+      <!-- Fila 1: Título y Código -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título del curso</mat-label>
+          <input matInput formControlName="title" placeholder="Ej: Salsa Básica para Principiantes">
+          <mat-icon matPrefix>title</mat-icon>
+          @if (courseForm.get('title')?.invalid && courseForm.get('title')?.touched) {
+            <mat-error>{{ getErrorMessage('title') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Código</mat-label>
+          <input matInput formControlName="code" placeholder="SAL-B-001">
+          <mat-icon matPrefix>tag</mat-icon>
+          @if (courseForm.get('code')?.invalid && courseForm.get('code')?.touched) {
+            <mat-error>{{ getErrorMessage('code') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 2: Tipo de baile y Nivel -->
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de baile</mat-label>
+          <mat-select formControlName="danceType">
+            @for (type of danceTypes; track type.value) {
+              <mat-option [value]="type.value">{{ type.label }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix>music_note</mat-icon>
+          @if (courseForm.get('danceType')?.invalid && courseForm.get('danceType')?.touched) {
+            <mat-error>{{ getErrorMessage('danceType') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nivel</mat-label>
+          <mat-select formControlName="level">
+            @for (level of danceLevels; track level.value) {
+              <mat-option [value]="level.value">{{ level.label }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix>signal_cellular_alt</mat-icon>
+          @if (courseForm.get('level')?.invalid && courseForm.get('level')?.touched) {
+            <mat-error>{{ getErrorMessage('level') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 3: Descripción -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" rows="3"
+                  placeholder="Describe el contenido y objetivos del curso"></textarea>
+        <mat-icon matPrefix>description</mat-icon>
+        @if (courseForm.get('description')?.invalid && courseForm.get('description')?.touched) {
+          <mat-error>{{ getErrorMessage('description') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 4: Precio, Duración y Capacidad -->
+      <div class="form-row three-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Precio por hora</mat-label>
+          <input matInput type="number" formControlName="pricePerHour" placeholder="15000">
+          <span matPrefix>$&nbsp;</span>
+          @if (courseForm.get('pricePerHour')?.invalid && courseForm.get('pricePerHour')?.touched) {
+            <mat-error>{{ getErrorMessage('pricePerHour') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Duración (horas)</mat-label>
+          <input matInput type="number" step="0.5" formControlName="durationHours" placeholder="1.5">
+          <mat-icon matPrefix>schedule</mat-icon>
+          @if (courseForm.get('durationHours')?.invalid && courseForm.get('durationHours')?.touched) {
+            <mat-error>{{ getErrorMessage('durationHours') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Capacidad máxima</mat-label>
+          <input matInput type="number" formControlName="maxCapacity" placeholder="20">
+          <mat-icon matPrefix>people</mat-icon>
+          @if (courseForm.get('maxCapacity')?.invalid && courseForm.get('maxCapacity')?.touched) {
+            <mat-error>{{ getErrorMessage('maxCapacity') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 5: Profesor -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Profesor asignado</mat-label>
+        <mat-select formControlName="teacherId">
+          @for (teacher of teachers(); track teacher.id) {
+            <mat-option [value]="teacher.id">
+              {{ teacher.firstName }} {{ teacher.lastName }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>person</mat-icon>
+        @if (courseForm.get('teacherId')?.invalid && courseForm.get('teacherId')?.touched) {
+          <mat-error>{{ getErrorMessage('teacherId') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 6: Imagen URL (opcional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>URL de imagen (opcional)</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="https://ejemplo.com/imagen.jpg">
+        <mat-icon matPrefix>image</mat-icon>
+      </mat-form-field>
+
+      <!-- Fila 7: Requisitos previos (opcional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Requisitos previos (opcional)</mat-label>
+        <textarea matInput formControlName="prerequisites" rows="2"
+                  placeholder="Ej: Conocimientos básicos de ritmo"></textarea>
+        <mat-icon matPrefix>check_circle</mat-icon>
+      </mat-form-field>
+
+      <!-- Fila 8: Objetivos (opcional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Objetivos del curso (opcional)</mat-label>
+        <textarea matInput formControlName="objectives" rows="2"
+                  placeholder="Ej: Aprender pasos básicos y mejorar postura"></textarea>
+        <mat-icon matPrefix>star</mat-icon>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" type="button" 
+            (click)="onSubmit()" 
+            [disabled]="courseForm.invalid">
+      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Curso' }}
+    </button>
+  </mat-dialog-actions>
+</div>

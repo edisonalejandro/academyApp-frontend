@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CourseDTO, CourseCapacityResponse, DanceType, DanceLevel } from '../models';
+import { CourseDTO, CreateCourseDTO, UpdateCourseDTO, CourseCapacityResponse, DanceType, DanceLevel } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -71,14 +71,14 @@ export class CourseService {
   /**
    * Crea un curso - requiere ADMIN
    */
-  createCourse(course: CourseDTO): Observable<CourseDTO> {
+  createCourse(course: CreateCourseDTO): Observable<CourseDTO> {
     return this.http.post<CourseDTO>(this.apiUrl, course);
   }
 
   /**
    * Actualiza un curso completo - requiere ADMIN
    */
-  updateCourse(id: number, course: CourseDTO): Observable<CourseDTO> {
+  updateCourse(id: number, course: UpdateCourseDTO): Observable<CourseDTO> {
     return this.http.put<CourseDTO>(`${this.apiUrl}/${id}`, course);
   }
 

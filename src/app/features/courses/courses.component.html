@@ -30,11 +30,24 @@
         <mat-icon>event_busy</mat-icon>
         <h2>No hay clases disponibles</h2>
         <p>No se encontraron clases en este momento.</p>
+        @if (authService.isAdmin()) {
+          <button mat-raised-button color="primary" (click)="openCreateCourseDialog()">
+            <mat-icon>add</mat-icon>
+            Crear Primera Clase
+          </button>
+        }
       </div>
     } @else {
       <div class="courses-grid">
         @for (course of courses(); track course.id) {
-          <mat-card class="course-card">
+          <mat-card class="course-card" [class.inactive]="!course.isActive">
+            <!-- Badge de estado inactivo (solo visible para admin) -->
+            @if (!course.isActive && authService.isAdmin()) {
+              <div class="inactive-badge">
+                <mat-chip color="warn" selected>INACTIVO</mat-chip>
+              </div>
+            }
+
             <mat-card-header>
               <div class="card-header-content">
                 <mat-card-title>{{ course.title }}</mat-card-title>
@@ -96,19 +109,50 @@
             </mat-card-content>
 
             <mat-card-actions>
-              <button mat-raised-button color="primary" 
-                      [disabled]="(course.availableSlots || 0) === 0">
-                <mat-icon>add_circle</mat-icon>
-                Inscribirse
-              </button>
-              <button mat-button>
-                <mat-icon>info</mat-icon>
-                Ver Detalles
-              </button>
+              <!-- Botones para usuarios normales -->
+              @if (!authService.isAdmin()) {
+                <button mat-raised-button color="primary" 
+                        [disabled]="!course.isActive || (course.availableSlots || 0) === 0">
+                  <mat-icon>add_circle</mat-icon>
+                  Inscribirse
+                </button>
+                <button mat-button>
+                  <mat-icon>info</mat-icon>
+                  Ver Detalles
+                </button>
+              }
+
+              <!-- Botones para administradores -->
+              @if (authService.isAdmin()) {
+                <div class="admin-actions">
+                  <button mat-raised-button color="primary" (click)="openEditCourseDialog(course)">
+                    <mat-icon>edit</mat-icon>
+                    Editar
+                  </button>
+                  <button mat-raised-button (click)="toggleCourseStatus(course)"
+                          [color]="course.isActive ? 'warn' : 'accent'">
+                    <mat-icon>{{ course.isActive ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    {{ course.isActive ? 'Desactivar' : 'Activar' }}
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteCourse(course)"
+                          matTooltip="Eliminar curso">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
             </mat-card-actions>
           </mat-card>
         }
       </div>
     }
+  }
+
+  <!-- Botón flotante para crear curso (solo admin) -->
+  @if (authService.isAdmin() && !isLoading() && !error()) {
+    <button mat-fab class="fab-add-course" color="primary" 
+            (click)="openCreateCourseDialog()"
+            matTooltip="Agregar nueva clase">
+      <mat-icon>add</mat-icon>
+    </button>
   }
 </div>

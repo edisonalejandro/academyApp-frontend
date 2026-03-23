@@ -281,3 +281,96 @@ mat-card-actions button {
     font-size: 0.85rem;
   }
 }
+
+/* ========================================
+   ESTILOS PARA ADMINISTRACIÓN
+   ======================================== */
+
+/* Botón flotante para agregar curso */
+.fab-add-course {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(45, 90, 61, 0.4) !important;
+}
+
+.fab-add-course:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 30px rgba(45, 90, 61, 0.6) !important;
+}
+
+/* Badge de curso inactivo */
+.inactive-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+}
+
+.inactive-badge mat-chip {
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+/* Tarjeta de curso inactivo */
+.course-card.inactive {
+  opacity: 0.7;
+  filter: grayscale(30%);
+}
+
+.course-card.inactive:hover {
+  opacity: 0.9;
+  filter: grayscale(0%);
+}
+
+/* Acciones de administrador */
+.admin-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.admin-actions button {
+  flex: 1;
+  min-width: fit-content;
+}
+
+.admin-actions button mat-icon {
+  margin-right: 4px;
+}
+
+/* Ajustes responsive para acciones admin */
+@media (max-width: 768px) {
+  .fab-add-course {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .admin-actions {
+    flex-direction: column;
+  }
+
+  .admin-actions button {
+    width: 100%;
+  }
+
+  .inactive-badge {
+    top: 8px;
+    left: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fab-add-course {
+    bottom: 1rem;
+    right: 1rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  .fab-add-course mat-icon {
+    font-size: 24px;
+  }
+}
