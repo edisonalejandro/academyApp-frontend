@@ -1,14 +1,19 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
   
-  // Obtener token del localStorage
-  const token = localStorage.getItem(environment.tokenKey);
+  // Obtener token del localStorage solo si estamos en el navegador
+  let token: string | null = null;
+  if (isPlatformBrowser(platformId)) {
+    token = localStorage.getItem(environment.tokenKey);
+  }
   
   // Si existe token, agregarlo a los headers
   if (token && req.url.startsWith(environment.apiUrl)) {
@@ -25,7 +30,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error) => {
       // Si es error 401 (No autorizado), redirigir al login
       if (error.status === 401) {
-        localStorage.removeItem(environment.tokenKey);
+        if (isPlatformBrowser(platformId)) {
+          localStorage.removeItem(environment.tokenKey);
+        }
         router.navigate(['/auth/login']);
       }
       
