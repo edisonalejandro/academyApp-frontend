@@ -1,0 +1,65 @@
+<div class="home-container">
+	<!-- Hero Banner -->
+	<section class="hero-banner">
+		<div class="hero-overlay"></div>
+		<div class="hero-content">
+			<p class="hero-subtitle">SIENTE EL MOVIMIENTO</p>
+			<h1 class="hero-title">
+				<span class="title-nakamas">Nakamas</span>
+				<span class="title-dance">Dance Academy</span>
+			</h1>
+			<p class="hero-description">
+				Descubre el arte del baile con los mejores instructores. Gestión personalizada,
+				videos interactivos y una comunidad apasionada.
+			</p>
+			<div class="hero-actions">
+				<button class="btn-primary" routerLink="/dashboard">
+					EXPLORAR DISCIPLINAS
+					<svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+				<button class="btn-secondary" routerLink="/auth/register">
+					UNIRSE AHORA
+				</button>
+			</div>
+		</div>
+		
+		<!-- Decorative dancer silhouette -->
+		<div class="dancer-silhouette">
+			<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M100 40C95 35 90 32 85 35C80 38 78 45 80 52C82 59 88 63 95 62C98 61 100 58 100 55V40Z" fill="white" opacity="0.2"/>
+				<ellipse cx="100" cy="90" rx="30" ry="40" fill="white" opacity="0.15"/>
+				<path d="M100 130L80 180L85 185L100 140L115 185L120 180L100 130Z" fill="white" opacity="0.2"/>
+				<path d="M70 100C65 95 55 90 50 95C45 100 50 110 60 110L70 100Z" fill="white" opacity="0.15"/>
+				<path d="M130 100C135 95 145 90 150 95C155 100 150 110 140 110L130 100Z" fill="white" opacity="0.15"/>
+			</svg>
+		</div>
+	</section>
+
+	<!-- Roles Section -->
+	<div class="hero-section">
+		<h2 class="section-title">¡Bienvenido a la Academia de Baile!</h2>
+		<p class="section-description">Elige tu rol y accede a todas las funcionalidades.</p>
+		<div class="roles-grid">
+			<div class="role-card student">
+				<mat-icon>emoji_people</mat-icon>
+				<h2>Alumno</h2>
+				<p>Consulta tus clases, pagos y horarios.</p>
+				<button mat-raised-button color="primary" routerLink="/dashboard">Ir al Panel</button>
+			</div>
+			<div class="role-card teacher">
+				<mat-icon>groups</mat-icon>
+				<h2>Profesor</h2>
+				<p>Gestiona tus clases y estudiantes.</p>
+				<button mat-raised-button color="accent" routerLink="/dashboard">Ir al Panel</button>
+			</div>
+			<div class="role-card admin">
+				<mat-icon>admin_panel_settings</mat-icon>
+				<h2>Administrador</h2>
+				<p>Administra usuarios, pagos y precios.</p>
+				<button mat-raised-button color="warn" routerLink="/dashboard">Ir al Panel</button>
+			</div>
+		</div>
+	</div>
+</div>
