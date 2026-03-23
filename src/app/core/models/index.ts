@@ -1,15 +1,30 @@
-// Enums
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  TEACHER = 'TEACHER',
-  STUDENT = 'STUDENT',
-  USER = 'USER'
+// ========================================
+// ENUMERACIONES
+// ========================================
+
+export enum StudentCategory {
+  REGULAR = 'REGULAR',
+  UNIVERSITY = 'UNIVERSITY',
+  COUPLE = 'COUPLE',
+  SENIOR = 'SENIOR',
+  CHILD = 'CHILD'
 }
 
-export enum UserStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED'
+export enum PricingType {
+  SINGLE_CLASS = 'SINGLE_CLASS',
+  PACKAGE_4 = 'PACKAGE_4',
+  PACKAGE_8 = 'PACKAGE_8',
+  PACKAGE_12 = 'PACKAGE_12',
+  COUPLE_PACKAGE_8 = 'COUPLE_PACKAGE_8',
+  UNLIMITED_MONTHLY = 'UNLIMITED_MONTHLY'
+}
+
+export enum PaymentMethod {
+  CASH = 'CASH',
+  CREDIT_CARD = 'CREDIT_CARD',
+  DEBIT_CARD = 'DEBIT_CARD',
+  BANK_TRANSFER = 'BANK_TRANSFER',
+  MOBILE_PAYMENT = 'MOBILE_PAYMENT'
 }
 
 export enum PaymentStatus {
@@ -20,210 +35,211 @@ export enum PaymentStatus {
   CANCELLED = 'CANCELLED'
 }
 
-export enum PricingRuleCategory {
-  STANDARD = 'STANDARD',
-  DISCOUNT = 'DISCOUNT',
-  PROMOTION = 'PROMOTION',
-  SPECIAL = 'SPECIAL'
+export enum DanceType {
+  SALSA = 'SALSA',
+  BACHATA = 'BACHATA',
+  MERENGUE = 'MERENGUE',
+  REGGAETON = 'REGGAETON',
+  CUMBIA = 'CUMBIA',
+  TANGO = 'TANGO',
+  KIZOMBA = 'KIZOMBA',
+  ZOUK = 'ZOUK',
+  MAMBO = 'MAMBO',
+  CHA_CHA_CHA = 'CHA_CHA_CHA'
 }
 
-// Interfaces principales
-export interface User {
-  id: number;
-  username: string;
+export enum DanceLevel {
+  BEGINNER = 'BEGINNER',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+  MASTER = 'MASTER',
+  OPEN = 'OPEN'
+}
+
+export enum EnrollmentStatus {
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  SUSPENDED = 'SUSPENDED',
+  TRANSFERRED = 'TRANSFERRED',
+  HOURS_EXHAUSTED = 'HOURS_EXHAUSTED'
+}
+
+// ========================================
+// AUTENTICACIÓN
+// ========================================
+
+export interface LoginRequest {
   email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  status: UserStatus;
-  roles: UserRole[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface AuthRequest {
-  username: string;
   password: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: User;
-  expiresIn: number;
 }
 
 export interface RegisterRequest {
-  username: string;
-  email: string;
-  password: string;
   firstName: string;
   lastName: string;
+  email: string;
+  password: string;
   phone?: string;
 }
 
-// Payment models
-export interface PaymentRequest {
-  courseId: number;
-  studentId: number;
-  amount: number;
-  currency: string;
-  paymentMethod: string;
-  description?: string;
-}
-
-export interface Payment {
+export interface JwtResponse {
+  token: string;
+  type: string;
   id: number;
-  code: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
+}
+
+export interface LogoutResponse {
+  message: string;
+}
+
+// ========================================
+// USUARIOS
+// ========================================
+
+export interface UserDTO {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string; // write-only
+  phone?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  roles?: string[]; // read-only
+}
+
+// ========================================
+// PRECIOS
+// ========================================
+
+export interface PricingCalculationRequest {
   courseId: number;
-  studentId: number;
-  amount: number;
-  currency: string;
-  status: PaymentStatus;
-  paymentMethod: string;
-  description?: string;
-  processedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  studentCategory: StudentCategory;
+  personCount?: number;
 }
 
-export interface PaymentValidation {
-  amount: number;
-  currency: string;
-  paymentMethod: string;
-}
-
-export interface PaymentStatusResponse {
-  code: string;
-  status: PaymentStatus;
-  amount: number;
-  currency: string;
-  processedAt?: Date;
-}
-
-// Pricing models
-export interface PricingCalculateRequest {
-  courseId?: number;
-  duration?: number;
-  studentType?: string;
-  promotionCode?: string;
-}
-
-export interface PricingOption {
-  id: string;
+export interface PricingOptionDTO {
+  pricingRuleId: number;
   name: string;
   description: string;
+  pricingType: PricingType;
+  classQuantity: number;
   originalPrice: number;
   finalPrice: number;
-  discount: number;
   discountPercentage: number;
-  currency: string;
-  validUntil?: Date;
+  savings: number;
+  pricePerClass: number;
+  isRecommended: boolean;
+  validFrom: string;
+  validUntil: string;
 }
 
-export interface PricingCalculateResponse {
-  options: PricingOption[];
-  bestOption: PricingOption;
-  currency: string;
-  calculatedAt: Date;
+export interface PricingCalculationDTO {
+  courseId: number;
+  courseName: string;
+  studentCategory: StudentCategory;
+  personCount: number;
+  isCouple: boolean;
+  options: PricingOptionDTO[];
+  recommendedOptionId: number;
+  calculatedAt: string;
+  hasDefaultPricing: boolean;
 }
 
-export interface PricingRule {
+export interface PricingRuleDTO {
   id: number;
   name: string;
   description: string;
-  category: PricingRuleCategory;
+  pricingType: PricingType;
+  studentCategory: StudentCategory;
+  personCount: number;
+  classQuantity: number;
+  price: number;
   discountPercentage: number;
-  fixedDiscount: number;
-  minAmount?: number;
-  maxAmount?: number;
-  validFrom: Date;
-  validTo?: Date;
+  finalPrice: number;
+  validFrom: string;
+  validUntil: string;
   isActive: boolean;
-  priority: number;
-  conditions: any; // JSON object with rule conditions
+  createdAt: string;
+  updatedAt: string;
 }
 
-// API Response wrappers
-export interface ApiResponse<T> {
-  data: T;
-  message: string;
-  success: boolean;
-  timestamp: Date;
+export interface QuickQuoteRequest {
+  studentCategory: StudentCategory;
+  personCount?: number;
 }
+
+// ========================================
+// PAGOS
+// ========================================
+
+export interface PaymentRequestDTO {
+  courseId: number;
+  pricingRuleId: number;
+  studentCategory: StudentCategory;
+  paymentMethod: PaymentMethod;
+  personCount: number;
+  notes?: string;
+  transactionId?: string;
+}
+
+export interface PaymentValidationResponse {
+  valid: boolean;
+  price?: number;
+  currency?: string;
+  message: string;
+}
+
+export interface PaymentResponseDTO {
+  id: number;
+  paymentCode: string;
+  studentName: string;
+  courseName: string;
+  pricingType: PricingType;
+  studentCategory: StudentCategory;
+  quantityClasses: number;
+  personCount: number;
+  originalPrice: number;
+  discountAmount: number;
+  finalPrice: number;
+  pricePerClass: number;
+  paymentMethod: PaymentMethod;
+  status: PaymentStatus;
+  transactionId?: string;
+  paymentDate: string;
+  createdAt: string;
+  notes?: string;
+}
+
+export interface FlexiblePriceResponse {
+  price: number;
+  currency: string;
+  numberOfClasses: number;
+  studentCategory: StudentCategory;
+  isCouple: boolean;
+  pricePerClass: number;
+}
+
+export interface PriceByRuleResponse {
+  price: number;
+  currency: string;
+  pricingRuleId: number;
+}
+
+// ========================================
+// UTILIDADES
+// ========================================
 
 export interface ApiError {
-  message: string;
-  error: string;
+  timestamp: string;
   status: number;
-  timestamp: Date;
+  error: string;
+  message: string;
   path: string;
-}
-
-// Search and pagination
-export interface SearchCriteria {
-  query?: string;
-  page?: number;
-  size?: number;
-  sortBy?: string;
-  sortDir?: 'asc' | 'desc';
-}
-
-export interface PagedResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  currentPage: number;
-  size: number;
-  first: boolean;
-  last: boolean;
-}
-
-// Role management
-export interface RoleAssignRequest {
-  userId: number;
-  role: UserRole;
-}
-
-export interface RoleRemoveRequest {
-  userId: number;
-  role: UserRole;
-}
-
-export interface UserRoleDistribution {
-  role: UserRole;
-  count: number;
-  percentage: number;
-}
-
-// Reports
-export interface RevenueReport {
-  period: string;
-  totalRevenue: number;
-  currency: string;
-  transactionCount: number;
-  averageTransaction: number;
-  breakdown: RevenueBreakdown[];
-}
-
-export interface RevenueBreakdown {
-  category: string;
-  amount: number;
-  percentage: number;
-  transactionCount: number;
-}
-
-export interface PaymentStats {
-  totalPayments: number;
-  totalRevenue: number;
-  currency: string;
-  successRate: number;
-  averageAmount: number;
-  topPaymentMethods: PaymentMethodStats[];
-}
-
-export interface PaymentMethodStats {
-  method: string;
-  count: number;
-  totalAmount: number;
-  percentage: number;
 }

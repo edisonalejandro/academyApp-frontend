@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { UserRole } from '../models';
 
 /**
  * Guard básico de autenticación
@@ -102,28 +101,4 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
   // Si ya está autenticado, redirigir al dashboard
   router.navigate(['/dashboard']);
   return false;
-};
-
-/**
- * Guard personalizable para múltiples roles
- */
-export const roleGuard = (allowedRoles: UserRole[]): CanActivateFn => {
-  return (route, state) => {
-    const authService = inject(AuthService);
-    const router = inject(Router);
-
-    if (!authService.isAuthenticated()) {
-      router.navigate(['/auth/login'], { 
-        queryParams: { returnUrl: state.url } 
-      });
-      return false;
-    }
-
-    if (authService.hasAnyRole(allowedRoles)) {
-      return true;
-    }
-
-    router.navigate(['/dashboard']);
-    return false;
-  };
 };

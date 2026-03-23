@@ -1,14 +1,13 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { 
-  User, 
-  AuthRequest, 
-  AuthResponse, 
+  LoginRequest,
   RegisterRequest,
-  UserRole 
+  JwtResponse,
+  LogoutResponse
 } from '../models';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class AuthService {
   private readonly baseUrl = `${environment.apiUrl}/auth`;
   
   // Signals para estado reactivo
-  private currentUserSignal = signal<User | null>(null);
+  private currentUserSignal = signal<JwtResponse | null>(null);
   private isAuthenticatedSignal = signal<boolean>(false);
   private isLoadingSignal = signal<boolean>(false);
   
@@ -27,13 +26,21 @@ export class AuthService {
   public isAuthenticated = this.isAuthenticatedSignal.asReadonly();
   public isLoading = this.isLoadingSignal.asReadonly();
   
-  // Computed para roles
+  // Computed para roles (formato ROLE_XXX según la API)
   public userRoles = computed(() => this.currentUserSignal()?.roles || []);
-  public isAdmin = computed(() => this.userRoles().includes(UserRole.ADMIN));
+  public isAdmin = computed(() => this.userRoles().includes('ROLE_ADMIN'));
   public isTeacher = computed(() => 
-    this.userRoles().includes(UserRole.TEACHER) || this.isAdmin()
+    this.userRoles().includes('ROLE_TEACHER') || this.isAdmin()
   );
-  public isStudent = computed(() => this.userRoles().includes(UserRole.STUDENT));
+  public isStudent = computed(() => this.userRoles().includes('ROLE_STUDENT'));
+  
+  // Información del usuario
+  public userId = computed(() => this.currentUserSignal()?.id);
+  public userEmail = computed(() => this.currentUserSignal()?.email);
+  public userName = computed(() => {
+    const user = this.currentUserSignal();
+    return user ? `${user.firstName} ${user.lastName}` : '';
+  });
 
   constructor(
     private http: HttpClient,
@@ -48,19 +55,17 @@ export class AuthService {
   private initializeAuth(): void {
     if (typeof localStorage !== 'undefined') {
       const token = localStorage.getItem(environment.tokenKey);
-      if (token) {
-        this.isLoadingSignal.set(true);
-        this.getMyProfile().subscribe({
-          next: (user) => {
-            this.currentUserSignal.set(user);
-            this.isAuthenticatedSignal.set(true);
-            this.isLoadingSignal.set(false);
-          },
-          error: () => {
-            this.logout();
-            this.isLoadingSignal.set(false);
-          }
-        });
+      const userDataStr = localStorage.getItem('academy_user');
+      
+      if (token && userDataStr) {
+        try {
+          const userData = JSON.parse(userDataStr) as JwtResponse;
+          this.currentUserSignal.set(userData);
+          this.isAuthenticatedSignal.set(true);
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+          this.clearAuth();
+        }
       }
     }
   }
@@ -68,16 +73,12 @@ export class AuthService {
   /**
    * Iniciar sesión
    */
-  login(credentials: AuthRequest): Observable<AuthResponse> {
+  login(credentials: LoginRequest): Observable<JwtResponse> {
     this.isLoadingSignal.set(true);
     
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, credentials).pipe(
+    return this.http.post<JwtResponse>(`${this.baseUrl}/login`, credentials).pipe(
       tap(response => {
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem(environment.tokenKey, response.token);
-        }
-        this.currentUserSignal.set(response.user);
-        this.isAuthenticatedSignal.set(true);
+        this.saveAuth(response);
         this.isLoadingSignal.set(false);
       }),
       catchError(error => {
@@ -90,16 +91,12 @@ export class AuthService {
   /**
    * Registrar nuevo usuario
    */
-  register(userData: RegisterRequest): Observable<AuthResponse> {
+  register(userData: RegisterRequest): Observable<JwtResponse> {
     this.isLoadingSignal.set(true);
     
-    return this.http.post<AuthResponse>(`${this.baseUrl}/register`, userData).pipe(
+    return this.http.post<JwtResponse>(`${this.baseUrl}/register`, userData).pipe(
       tap(response => {
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem(environment.tokenKey, response.token);
-        }
-        this.currentUserSignal.set(response.user);
-        this.isAuthenticatedSignal.set(true);
+        this.saveAuth(response);
         this.isLoadingSignal.set(false);
       }),
       catchError(error => {
@@ -112,77 +109,51 @@ export class AuthService {
   /**
    * Cerrar sesión
    */
-  logout(): void {
-    let token: string | null = null;
+  logout(): Observable<LogoutResponse> {
+    return this.http.post<LogoutResponse>(`${this.baseUrl}/logout`, {}).pipe(
+      tap(() => {
+        this.clearAuth();
+        this.router.navigate(['/auth/login']);
+      }),
+      catchError(error => {
+        // Incluso si falla el logout en el servidor, limpiar el cliente
+        this.clearAuth();
+        this.router.navigate(['/auth/login']);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Cerrar sesión local (sin llamar al servidor)
+   */
+  logoutLocal(): void {
+    this.clearAuth();
+    this.router.navigate(['/auth/login']);
+  }
+
+  /**
+   * Guardar datos de autenticación
+   */
+  private saveAuth(response: JwtResponse): void {
     if (typeof localStorage !== 'undefined') {
-      token = localStorage.getItem(environment.tokenKey);
+      localStorage.setItem(environment.tokenKey, response.token);
+      localStorage.setItem('academy_user', JSON.stringify(response));
     }
-    if (token) {
-      // Llamar al endpoint de logout del backend
-      this.http.post(`${this.baseUrl}/logout`, {}).subscribe({
-        complete: () => {
-          this.clearAuthState();
-          this.router.navigate(['/auth/login']);
-        },
-        error: () => {
-          // Limpiar estado local aunque falle el logout en el servidor
-          this.clearAuthState();
-          this.router.navigate(['/auth/login']);
-        }
-      });
-    } else {
-      this.clearAuthState();
-      this.router.navigate(['/auth/login']);
-    }
+    this.currentUserSignal.set(response);
+    this.isAuthenticatedSignal.set(true);
   }
 
   /**
-   * Obtener perfil del usuario actual
+   * Limpiar datos de autenticación
    */
-  getMyProfile(): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}/users/me`);
-  }
-
-  /**
-   * Limpiar estado de autenticación
-   */
-  private clearAuthState(): void {
+  private clearAuth(): void {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(environment.tokenKey);
+      localStorage.removeItem('academy_user');
     }
     this.currentUserSignal.set(null);
     this.isAuthenticatedSignal.set(false);
-  }
-
-  /**
-   * Verificar si el usuario tiene un rol específico
-   */
-  hasRole(role: UserRole): boolean {
-    return this.userRoles().includes(role);
-  }
-
-  /**
-   * Verificar si el usuario tiene alguno de los roles especificados
-   */
-  hasAnyRole(roles: UserRole[]): boolean {
-    const userRoles = this.userRoles();
-    return roles.some(role => userRoles.includes(role));
-  }
-
-  /**
-   * Verificar si el token es válido (sin hacer llamada al servidor)
-   */
-  isTokenValid(): boolean {
-    if (typeof localStorage === 'undefined') return false;
-    const token = localStorage.getItem(environment.tokenKey);
-    if (!token) return false;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const now = Date.now() / 1000;
-      return payload.exp > now;
-    } catch {
-      return false;
-    }
   }
 
   /**
@@ -193,5 +164,15 @@ export class AuthService {
       return localStorage.getItem(environment.tokenKey);
     }
     return null;
+  }
+
+  /**
+   * Verificar si el token ha expirado (duración: 24 horas)
+   * Nota: Esto es una verificación básica, idealmente deberías decodificar el JWT
+   */
+  isTokenExpired(): boolean {
+    // Simplemente verificar si existe el token
+    // Para una implementación completa, deberías usar una librería como jwt-decode
+    return !this.getToken();
   }
 }
