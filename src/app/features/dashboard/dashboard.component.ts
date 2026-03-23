@@ -9,7 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
-import { User, UserRole } from '../../core/models';
+import { JwtResponse } from '../../core/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -404,7 +404,7 @@ import { User, UserRole } from '../../core/models';
   `]
 })
 export class DashboardComponent implements OnInit {
-  currentUser: () => User | null;
+  currentUser: () => JwtResponse | null;
   
   stats = {
     totalUsers: 156,
@@ -428,9 +428,9 @@ export class DashboardComponent implements OnInit {
 
   getUserRoleDisplay(): string {
     const roles = this.authService.userRoles();
-    if (roles.includes(UserRole.ADMIN)) return 'Administrador';
-    if (roles.includes(UserRole.TEACHER)) return 'Profesor';
-    if (roles.includes(UserRole.STUDENT)) return 'Estudiante';
+    if (roles.includes('ROLE_ADMIN')) return 'Administrador';
+    if (roles.includes('ROLE_TEACHER')) return 'Profesor';
+    if (roles.includes('ROLE_STUDENT')) return 'Estudiante';
     return 'Usuario';
   }
 

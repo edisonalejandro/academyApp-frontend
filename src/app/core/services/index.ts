@@ -5,3 +5,6 @@ export * from './role.service';
 export * from './pricing.service';
 export * from './payment.service';
 export * from './test.service';
+export * from './course.service';
+export * from './student.service';
+export * from './enrollment.service';

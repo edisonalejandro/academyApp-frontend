@@ -1,6 +1,7 @@
 # 🎓 Academia de Baile — Documentación de API para Frontend
 
 **Versión backend**: Spring Boot 3.5.11 | Java 21  
+**Base de datos**: PostgreSQL  
 **Fecha**: 23 de marzo de 2026
 
 ---
@@ -467,6 +468,190 @@ Historial de pagos del usuario autenticado.
 
 ---
 
+### 7. Cursos — `/api/courses`
+
+> Los endpoints de consulta (`GET`) son **públicos** (sin token).  
+> Las operaciones de escritura requieren rol `ADMIN`.
+
+| Método   | Endpoint                              | Roles            | Descripción |
+| -------- | ------------------------------------- | ---------------- | ----------- |
+| `GET`    | `/api/courses`                        | Público          | Cursos activos |
+| `GET`    | `/api/courses/all`                    | ADMIN            | Todos los cursos (incluye inactivos) |
+| `GET`    | `/api/courses/{id}`                   | Público          | Curso por ID |
+| `GET`    | `/api/courses/search?q=...`           | Público          | Buscar por texto (título, código, descripción) |
+| `GET`    | `/api/courses/dance-type/{danceType}` | Público          | Por tipo de baile |
+| `GET`    | `/api/courses/level/{level}`          | Público          | Por nivel |
+| `GET`    | `/api/courses/teacher/{teacherId}`    | ADMIN, TEACHER   | Cursos de un profesor |
+| `GET`    | `/api/courses/{id}/capacity`          | Público          | Cupos disponibles |
+| `POST`   | `/api/courses`                        | ADMIN            | Crear curso |
+| `PUT`    | `/api/courses/{id}`                   | ADMIN            | Actualizar curso completo |
+| `DELETE` | `/api/courses/{id}`                   | ADMIN            | Eliminar (lógico) |
+| `PATCH`  | `/api/courses/{id}/toggle-status`     | ADMIN            | Activar / Desactivar |
+
+**Objeto `CourseDTO`**
+```json
+{
+  "id": 1,
+  "title": "Salsa Básica para Principiantes",
+  "code": "SAL-B-001",
+  "description": "Aprende los fundamentos de la salsa desde cero",
+  "danceType": "SALSA",
+  "level": "BEGINNER",
+  "pricePerHour": 15000.00,
+  "durationHours": 1.5,
+  "maxCapacity": 20,
+  "teacherId": 2,
+  "teacherName": "Pedro Gómez",
+  "teacherEmail": "pedro@academia.com",
+  "isActive": true,
+  "imageUrl": null,
+  "prerequisites": null,
+  "objectives": "Aprender pasos básicos y postura",
+  "activeEnrollments": 8,
+  "availableSlots": 12,
+  "createdAt": "2026-01-01T00:00:00",
+  "updatedAt": "2026-03-23T20:00:00"
+}
+```
+
+**Response `GET /api/courses/{id}/capacity`**
+```json
+{
+  "courseId": 1,
+  "courseTitle": "Salsa Básica para Principiantes",
+  "maxCapacity": 20,
+  "activeEnrollments": 8,
+  "availableSlots": 12
+}
+```
+
+> Para crear/actualizar: enviar `teacherId`, `danceType` y `level` con los valores exactos de las enumeraciones.
+
+---
+
+### 8. Estudiantes — `/api/students`
+
+> Requiere `Authorization: Bearer <token>`
+
+| Método  | Endpoint                           | Roles                     | Descripción |
+| ------- | ---------------------------------- | ------------------------- | ----------- |
+| `GET`   | `/api/students`                    | ADMIN, TEACHER            | Todos los estudiantes |
+| `GET`   | `/api/students/{id}`               | ADMIN, TEACHER            | Estudiante por ID |
+| `GET`   | `/api/students/me`                 | Cualquier autenticado     | Perfil propio |
+| `GET`   | `/api/students/search?q=...`       | ADMIN, TEACHER            | Buscar por nombre, email o teléfono |
+| `GET`   | `/api/students/status/{status}`    | ADMIN, TEACHER            | Por estado |
+| `GET`   | `/api/students/category/{category}`| ADMIN, TEACHER            | Por categoría |
+| `POST`  | `/api/students`                    | ADMIN                     | Crear estudiante |
+| `PUT`   | `/api/students/{id}`               | ADMIN                     | Actualizar datos completos |
+| `PATCH` | `/api/students/{id}/category`      | ADMIN                     | Cambiar categoría |
+
+**Objeto `StudentDTO`**
+```json
+{
+  "id": 1,
+  "firstName": "Ana",
+  "lastName": "García",
+  "email": "ana.garcia@email.com",
+  "phone": "+56912345678",
+  "emergencyContact": "Luis García",
+  "emergencyPhone": "+56987654321",
+  "dateOfBirth": "2000-05-15",
+  "address": "Calle Falsa 123",
+  "category": "UNIVERSITY",
+  "status": "ACTIVE",
+  "universityName": "Universidad de Chile",
+  "studentId": "20231234",
+  "career": "Ingeniería",
+  "semester": 4,
+  "medicalConditions": null,
+  "allergies": null,
+  "medications": null,
+  "danceExperience": "Principiante en salsa",
+  "fitnessLevel": "Intermedio",
+  "physicalLimitations": null,
+  "preferredContactMethod": "EMAIL",
+  "newsletterSubscription": true,
+  "promotionalEmails": true,
+  "notes": null,
+  "userId": 5,
+  "userEmail": "ana.garcia@email.com",
+  "fullName": "Ana García",
+  "createdAt": "2026-01-15T10:00:00",
+  "updatedAt": "2026-03-23T20:00:00"
+}
+```
+
+**Request `PATCH /api/students/{id}/category`**
+```json
+{ "category": "UNIVERSITY" }
+```
+
+---
+
+### 9. Inscripciones — `/api/enrollments`
+
+> Requiere `Authorization: Bearer <token>`  
+> Los nuevos pagos procesados por `/api/payments/process` crean inscripciones automáticamente.
+
+| Método  | Endpoint                           | Roles          | Descripción |
+| ------- | ---------------------------------- | -------------- | ----------- |
+| `GET`   | `/api/enrollments/my`              | Todos autent.  | Todas mis inscripciones |
+| `GET`   | `/api/enrollments/my/active`       | Todos autent.  | Solo mis inscripciones activas |
+| `GET`   | `/api/enrollments/my/summary`      | Todos autent.  | Resumen de horas compradas/usadas |
+| `GET`   | `/api/enrollments/{id}`            | ADMIN, TEACHER | Inscripción por ID |
+| `GET`   | `/api/enrollments/course/{courseId}` | ADMIN, TEACHER | Inscripciones de un curso |
+| `PATCH` | `/api/enrollments/{id}/cancel`     | ADMIN          | Cancelar inscripción |
+| `PATCH` | `/api/enrollments/{id}/suspend`    | ADMIN          | Suspender inscripción |
+| `PATCH` | `/api/enrollments/{id}/reactivate` | ADMIN          | Reactivar inscripción suspendida |
+
+**Objeto `EnrollmentDTO`**
+```json
+{
+  "id": 1,
+  "studentId": 1,
+  "studentName": "Ana García",
+  "studentEmail": "ana.garcia@email.com",
+  "courseId": 1,
+  "courseName": "Salsa Básica para Principiantes",
+  "courseCode": "SAL-B-001",
+  "paymentId": 10,
+  "paymentCode": "PAY-20260323-ABC123",
+  "status": "ACTIVE",
+  "enrollmentDate": "2026-03-23T20:00:00",
+  "startDate": null,
+  "endDate": null,
+  "purchasedHours": 6.0,
+  "usedHours": 1.5,
+  "remainingHours": 4.5,
+  "totalPaid": 54000.00,
+  "paidAmount": 54000.00,
+  "discountPercentage": 10.0,
+  "finalPrice": 54000.00,
+  "notes": null,
+  "createdAt": "2026-03-23T20:00:00",
+  "updatedAt": "2026-03-23T20:00:00"
+}
+```
+
+**Response `GET /api/enrollments/my/summary`**
+```json
+{
+  "totalEnrollments": 3,
+  "activeEnrollments": 2,
+  "totalHoursPurchased": 18.0,
+  "totalHoursUsed": 4.5,
+  "totalHoursRemaining": 13.5,
+  "totalAmountPaid": 120000.00
+}
+```
+
+**Request `PATCH /api/enrollments/{id}/cancel`** (body opcional)
+```json
+{ "reason": "El estudiante no puede continuar por motivos personales" }
+```
+
+---
+
 ## 📦 Enumeraciones (valores aceptados por la API)
 
 ### `StudentCategory`
@@ -513,7 +698,25 @@ Historial de pagos del usuario autenticado.
 `BEGINNER` | `INTERMEDIATE` | `ADVANCED` | `MASTER` | `OPEN`
 
 ### `EnrollmentStatus`
-`PENDING` | `ACTIVE` | `COMPLETED` | `CANCELLED` | `SUSPENDED` | `TRANSFERRED` | `HOURS_EXHAUSTED`
+| Valor             | Descripción |
+|-------------------|-------------|
+| `PENDING`         | Pendiente de confirmación |
+| `ACTIVE`          | Inscripción activa |
+| `COMPLETED`       | Completada |
+| `CANCELLED`       | Cancelada |
+| `SUSPENDED`       | Suspendida temporalmente |
+| `TRANSFERRED`     | Transferida a otro curso |
+| `HOURS_EXHAUSTED` | Se agotaron las horas compradas |
+
+### `StudentStatus`
+| Valor         | Descripción |
+|---------------|-------------|
+| `ACTIVE`      | Activo |
+| `INACTIVE`    | Inactivo |
+| `SUSPENDED`   | Suspendido |
+| `GRADUATED`   | Graduado |
+| `DROPPED_OUT` | Abandonó |
+| `ON_HOLD`     | En espera |
 
 ---
 
@@ -545,19 +748,50 @@ El backend responde con estos códigos HTTP estándar:
 
 ---
 
-## 🚀 Flujo de uso recomendado (paso a paso)
+## 🚀 Flujos de uso recomendados
 
-### Flujo de inscripción de un estudiante
+### Flujo 1 — Explorar cursos (sin login)
+
+```
+1. GET /api/courses                              → catálogo de cursos activos
+2. GET /api/courses/dance-type/SALSA             → filtrar por tipo de baile
+3. GET /api/courses/{id}                         → detalle de un curso
+4. GET /api/courses/{id}/capacity                → verificar cupos disponibles
+5. GET /api/pricing/calculate?courseId=X         → ver precios disponibles
+           &studentCategory=REGULAR
+```
+
+### Flujo 2 — Inscripción de un estudiante
 
 ```
 1. POST /api/auth/login                          → obtener token
-2. GET  /api/pricing/calculate                   → mostrar opciones al usuario
+2. GET  /api/courses                             → elegir curso
+3. GET  /api/pricing/calculate                   → mostrar opciones de precio
            ?courseId=X&studentCategory=REGULAR
-3. GET  /api/pricing/rules/available             → obtener pricingRuleId elegida
-           ?courseId=X&studentCategory=REGULAR
-4. POST /api/payments/validate                   → confirmar antes de cobrar
-5. POST /api/payments/process          🔒        → procesar pago y generar inscripción
-6. GET  /api/payments/status/{code}    🔒        → mostrar comprobante
+4. POST /api/payments/validate          🔒       → confirmar antes de cobrar
+5. POST /api/payments/process           🔒       → procesar pago → crea inscripción automáticamente
+6. GET  /api/payments/status/{code}     🔒       → mostrar comprobante
+7. GET  /api/enrollments/my             🔒       → ver inscripción generada
+```
+
+### Flujo 3 — Perfil del estudiante
+
+```
+1. POST /api/auth/login                          → obtener token
+2. GET  /api/students/me                🔒       → ver perfil propio
+3. GET  /api/enrollments/my             🔒       → ver inscripciones activas
+4. GET  /api/enrollments/my/summary     🔒       → ver resumen de horas
+```
+
+### Flujo 4 — Panel de administración
+
+```
+1. POST /api/auth/login (ADMIN)                  → obtener token
+2. GET  /api/students                   🔒       → lista de todos los estudiantes
+3. GET  /api/students/search?q=...      🔒       → buscar estudiante
+4. GET  /api/enrollments/course/{id}    🔒       → ver inscritos de un curso
+5. GET  /api/courses/all                🔒       → ver todos los cursos (activos + inactivos)
+6. PATCH /api/courses/{id}/toggle-status 🔒      → activar/desactivar curso
 ```
 
 ---

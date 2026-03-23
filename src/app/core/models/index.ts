@@ -66,6 +66,15 @@ export enum EnrollmentStatus {
   HOURS_EXHAUSTED = 'HOURS_EXHAUSTED'
 }
 
+export enum StudentStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  GRADUATED = 'GRADUATED',
+  DROPPED_OUT = 'DROPPED_OUT',
+  ON_HOLD = 'ON_HOLD'
+}
+
 // ========================================
 // AUTENTICACIÓN
 // ========================================
@@ -230,6 +239,125 @@ export interface PriceByRuleResponse {
   price: number;
   currency: string;
   pricingRuleId: number;
+}
+
+// ========================================
+// CURSOS
+// ========================================
+
+export interface CourseDTO {
+  id: number;
+  title: string;
+  code: string;
+  description: string;
+  danceType: DanceType;
+  level: DanceLevel;
+  pricePerHour: number;
+  durationHours: number;
+  maxCapacity: number;
+  teacherId: number;
+  teacherName?: string;
+  teacherEmail?: string;
+  isActive: boolean;
+  imageUrl?: string;
+  prerequisites?: string;
+  objectives?: string;
+  activeEnrollments?: number;
+  availableSlots?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CourseCapacityResponse {
+  courseId: number;
+  courseTitle: string;
+  maxCapacity: number;
+  activeEnrollments: number;
+  availableSlots: number;
+}
+
+// ========================================
+// ESTUDIANTES
+// ========================================
+
+export interface StudentDTO {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  emergencyContact?: string;
+  emergencyPhone?: string;
+  dateOfBirth?: string;
+  address?: string;
+  category: StudentCategory;
+  status: StudentStatus;
+  universityName?: string;
+  studentId?: string;
+  career?: string;
+  semester?: number;
+  medicalConditions?: string;
+  allergies?: string;
+  medications?: string;
+  danceExperience?: string;
+  fitnessLevel?: string;
+  physicalLimitations?: string;
+  preferredContactMethod?: string;
+  newsletterSubscription?: boolean;
+  promotionalEmails?: boolean;
+  notes?: string;
+  userId?: number;
+  userEmail?: string;
+  fullName?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StudentCategoryUpdateRequest {
+  category: StudentCategory;
+}
+
+// ========================================
+// INSCRIPCIONES
+// ========================================
+
+export interface EnrollmentDTO {
+  id: number;
+  studentId: number;
+  studentName: string;
+  studentEmail: string;
+  courseId: number;
+  courseName: string;
+  courseCode: string;
+  paymentId: number;
+  paymentCode: string;
+  status: EnrollmentStatus;
+  enrollmentDate: string;
+  startDate?: string;
+  endDate?: string;
+  purchasedHours: number;
+  usedHours: number;
+  remainingHours: number;
+  totalPaid: number;
+  paidAmount: number;
+  discountPercentage: number;
+  finalPrice: number;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EnrollmentSummaryResponse {
+  totalEnrollments: number;
+  activeEnrollments: number;
+  totalHoursPurchased: number;
+  totalHoursUsed: number;
+  totalHoursRemaining: number;
+  totalAmountPaid: number;
+}
+
+export interface EnrollmentCancelRequest {
+  reason?: string;
 }
 
 // ========================================

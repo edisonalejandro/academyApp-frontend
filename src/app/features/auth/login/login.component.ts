@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AuthService } from '../../../core/services/auth.service';
-import { AuthRequest } from '../../../core/models';
+import { LoginRequest } from '../../../core/models';
 
 @Component({
   selector: 'app-login',
@@ -241,7 +241,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const credentials: AuthRequest = this.loginForm.value;
+      const credentials: LoginRequest = this.loginForm.value;
       
       this.authService.login(credentials).subscribe({
         next: (response) => {
