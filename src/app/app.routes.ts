@@ -32,6 +32,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/dashboard/dashboard.component').then(c => c.DashboardComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'courses',
+    loadComponent: () => import('./features/courses/courses.component').then(c => c.CoursesComponent)
+    // Público - todos pueden ver el catálogo de cursos
+  },
   // Rutas para Admin
   //{
   //  path: 'users',

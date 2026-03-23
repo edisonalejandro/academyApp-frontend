@@ -1,0 +1,114 @@
+<div class="courses-container">
+  <div class="header-section">
+    <h1 class="page-title">
+      <mat-icon>school</mat-icon>
+      Catálogo de Clases
+    </h1>
+    <p class="page-subtitle">Explora nuestras clases de baile disponibles</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Cargando clases...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="loadCourses()">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  @if (!isLoading() && !error()) {
+    @if (courses().length === 0) {
+      <div class="empty-state">
+        <mat-icon>event_busy</mat-icon>
+        <h2>No hay clases disponibles</h2>
+        <p>No se encontraron clases en este momento.</p>
+      </div>
+    } @else {
+      <div class="courses-grid">
+        @for (course of courses(); track course.id) {
+          <mat-card class="course-card">
+            <mat-card-header>
+              <div class="card-header-content">
+                <mat-card-title>{{ course.title }}</mat-card-title>
+                <mat-card-subtitle>{{ course.code }}</mat-card-subtitle>
+              </div>
+              <div class="card-badges">
+                <mat-chip [color]="getDanceLevelColor(course.level)" selected>
+                  {{ getDanceLevelLabel(course.level) }}
+                </mat-chip>
+              </div>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="course-info">
+                <div class="info-row">
+                  <mat-icon class="info-icon">music_note</mat-icon>
+                  <span class="info-label">Estilo:</span>
+                  <span class="info-value">{{ getDanceTypeLabel(course.danceType) }}</span>
+                </div>
+
+                <div class="info-row">
+                  <mat-icon class="info-icon">person</mat-icon>
+                  <span class="info-label">Profesor:</span>
+                  <span class="info-value">{{ course.teacherName }}</span>
+                </div>
+
+                <div class="info-row">
+                  <mat-icon class="info-icon">schedule</mat-icon>
+                  <span class="info-label">Duración:</span>
+                  <span class="info-value">{{ formatDuration(course.durationHours) }}</span>
+                </div>
+
+                <div class="info-row">
+                  <mat-icon class="info-icon">attach_money</mat-icon>
+                  <span class="info-label">Precio/hora:</span>
+                  <span class="info-value price">{{ formatPrice(course.pricePerHour) }}</span>
+                </div>
+
+                @if (course.description) {
+                  <div class="course-description">
+                    <p>{{ course.description }}</p>
+                  </div>
+                }
+
+                <div class="capacity-info">
+                  <div class="capacity-bar">
+                    <div class="capacity-fill" 
+                         [style.width.%]="(course.activeEnrollments || 0) / course.maxCapacity * 100">
+                    </div>
+                  </div>
+                  <div class="capacity-text">
+                    <span class="enrolled">{{ course.activeEnrollments || 0 }} inscritos</span>
+                    <span class="available">
+                      {{ course.availableSlots || course.maxCapacity }} disponibles
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-raised-button color="primary" 
+                      [disabled]="(course.availableSlots || 0) === 0">
+                <mat-icon>add_circle</mat-icon>
+                Inscribirse
+              </button>
+              <button mat-button>
+                <mat-icon>info</mat-icon>
+                Ver Detalles
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>
