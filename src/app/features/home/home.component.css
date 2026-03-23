@@ -31,14 +31,14 @@
   justify-content: center;
   overflow: hidden;
   background: 
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)),
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
     url('/Banner1.png') center/cover no-repeat;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.95) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.6) 100%);
   pointer-events: none;
 }
 
@@ -48,7 +48,7 @@
   text-align: center;
   max-width: 800px;
   padding: 3rem 2.5rem;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
