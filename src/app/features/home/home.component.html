@@ -3,63 +3,148 @@
 	<section class="hero-banner">
 		<div class="hero-overlay"></div>
 		<div class="hero-content">
-			<p class="hero-subtitle">SIENTE EL MOVIMIENTO</p>
-			<h1 class="hero-title">
-				<span class="title-nakamas">Nakamas</span>
-				<span class="title-dance">Dance Academy</span>
-			</h1>
-			<p class="hero-description">
-				Descubre el arte del baile con los mejores instructores. Gestión personalizada,
-				videos interactivos y una comunidad apasionada.
+			<h1 class="hero-title">Nakama Dance Academy</h1>
+			<p class="hero-subtitle">
+				Aprende salsa y bachata en una academia pensada para crecer, disfrutar y conectar.
 			</p>
 			<div class="hero-actions">
 				<button class="btn-primary" routerLink="/dashboard">
-					EXPLORAR DISCIPLINAS
-					<svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-					</svg>
+					Ver clases
 				</button>
 				<button class="btn-secondary" routerLink="/auth/register">
-					UNIRSE AHORA
+					Reservar clase
 				</button>
 			</div>
-		</div>
-		
-		<!-- Decorative dancer silhouette -->
-		<div class="dancer-silhouette">
-			<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M100 40C95 35 90 32 85 35C80 38 78 45 80 52C82 59 88 63 95 62C98 61 100 58 100 55V40Z" fill="white" opacity="0.2"/>
-				<ellipse cx="100" cy="90" rx="30" ry="40" fill="white" opacity="0.15"/>
-				<path d="M100 130L80 180L85 185L100 140L115 185L120 180L100 130Z" fill="white" opacity="0.2"/>
-				<path d="M70 100C65 95 55 90 50 95C45 100 50 110 60 110L70 100Z" fill="white" opacity="0.15"/>
-				<path d="M130 100C135 95 145 90 150 95C155 100 150 110 140 110L130 100Z" fill="white" opacity="0.15"/>
-			</svg>
 		</div>
 	</section>
 
-	<!-- Roles Section -->
-	<div class="hero-section">
-		<h2 class="section-title">¡Bienvenido a la Academia de Baile!</h2>
-		<p class="section-description">Elige tu rol y accede a todas las funcionalidades.</p>
-		<div class="roles-grid">
-			<div class="role-card student">
-				<mat-icon>emoji_people</mat-icon>
-				<h2>Alumno</h2>
-				<p>Consulta tus clases, pagos y horarios.</p>
-				<button mat-raised-button color="primary" routerLink="/dashboard">Ir al Panel</button>
-			</div>
-			<div class="role-card teacher">
-				<mat-icon>groups</mat-icon>
-				<h2>Profesor</h2>
-				<p>Gestiona tus clases y estudiantes.</p>
-				<button mat-raised-button color="accent" routerLink="/dashboard">Ir al Panel</button>
-			</div>
-			<div class="role-card admin">
-				<mat-icon>admin_panel_settings</mat-icon>
-				<h2>Administrador</h2>
-				<p>Administra usuarios, pagos y precios.</p>
-				<button mat-raised-button color="warn" routerLink="/dashboard">Ir al Panel</button>
-			</div>
+	<!-- Access Section -->
+	<section class="access-section">
+		<div class="section-header">
+			<h2 class="section-title">Accede a tu espacio</h2>
+			<p class="section-subtitle">
+				Ingresa según tu perfil para gestionar clases, alumnos y administración de la academia.
+			</p>
 		</div>
-	</div>
+
+		<div class="cards-grid">
+			<!-- Alumno Card -->
+			<article class="access-card">
+				<div class="card-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+					</svg>
+				</div>
+				<h3 class="card-title">Alumno</h3>
+				<p class="card-description">
+					Reserva clases, revisa horarios y sigue tu progreso.
+				</p>
+				<ul class="card-features">
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Próximas clases
+					</li>
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Estado de pagos
+					</li>
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Historial de asistencia
+					</li>
+				</ul>
+				<button class="card-button" routerLink="/auth/login">
+					Entrar como alumno
+					<svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+			</article>
+
+			<!-- Profesor Card -->
+			<article class="access-card featured">
+				<div class="card-badge">Más usado</div>
+				<div class="card-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+					</svg>
+				</div>
+				<h3 class="card-title">Profesor</h3>
+				<p class="card-description">
+					Administra tus clases y visualiza tus estudiantes.
+				</p>
+				<ul class="card-features">
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Lista de alumnos
+					</li>
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Horarios asignados
+					</li>
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Seguimiento de asistencia
+					</li>
+				</ul>
+				<button class="card-button" routerLink="/auth/login">
+					Entrar como profesor
+					<svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+			</article>
+
+			<!-- Administrador Card -->
+			<article class="access-card">
+				<div class="card-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+					</svg>
+				</div>
+				<h3 class="card-title">Administrador</h3>
+				<p class="card-description">
+					Control total sobre usuarios, pagos y operaciones.
+				</p>
+				<ul class="card-features">
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Gestión de usuarios
+					</li>
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Clases y precios
+					</li>
+					<li>
+						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+						Reportes
+					</li>
+				</ul>
+				<button class="card-button" routerLink="/auth/login">
+					Entrar al panel
+					<svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+			</article>
+		</div>
+	</section>
 </div>
