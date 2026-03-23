@@ -121,6 +121,179 @@
 }
 
 /* ========================================
+   DISCIPLINES SECTION
+   ======================================== */
+.disciplines-section {
+  position: relative;
+  padding: var(--spacing-xl) var(--spacing-md);
+  background: #000000;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.disciplines-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+  gap: 2rem;
+}
+
+.disciplines-title {
+  font-size: 3rem;
+  font-weight: 400;
+  color: white;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.disciplines-title em {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.disciplines-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 600px;
+}
+
+.btn-view-all {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: #FF6B35;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+.btn-view-all:hover {
+  color: #FF8555;
+  transform: translateX(5px);
+}
+
+.btn-view-all .arrow-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.btn-view-all:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+/* Disciplines Grid */
+.disciplines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.discipline-card {
+  position: relative;
+  height: 450px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.discipline-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.discipline-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #1a1a1a;
+  transition: transform 0.5s ease;
+}
+
+.discipline-card:hover .discipline-image {
+  transform: scale(1.05);
+}
+
+.discipline-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  transition: background 0.3s ease;
+}
+
+.discipline-card:hover .discipline-overlay {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.discipline-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.discipline-name {
+  font-size: 1.75rem;
+  font-weight: 400;
+  font-style: italic;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.btn-explore {
+  align-self: flex-start;
+  padding: 0.5rem 0;
+  background: transparent;
+  color: #FF6B35;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-explore::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #FF6B35;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.btn-explore:hover::after {
+  transform: scaleX(1);
+}
+
+.btn-explore:hover {
+  color: #FF8555;
+}
+
+/* ========================================
    ACCESS SECTION
    ======================================== */
 .access-section {
@@ -316,6 +489,15 @@
     font-size: 2rem;
   }
 
+  .disciplines-title {
+    font-size: 2.5rem;
+  }
+
+  .disciplines-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
   .cards-grid {
     grid-template-columns: 1fr;
     max-width: 500px;
@@ -354,6 +536,23 @@
     width: 100%;
   }
 
+  .disciplines-section {
+    padding: var(--spacing-lg) 1.5rem;
+  }
+
+  .disciplines-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .disciplines-title {
+    font-size: 2rem;
+  }
+
+  .discipline-card {
+    height: 400px;
+  }
+
   .access-section {
     padding: var(--spacing-lg) 1.5rem;
   }
@@ -374,6 +573,22 @@
 
   .hero-subtitle {
     font-size: 1rem;
+  }
+
+  .disciplines-title {
+    font-size: 1.75rem;
+  }
+
+  .disciplines-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .discipline-card {
+    height: 350px;
+  }
+
+  .discipline-name {
+    font-size: 1.5rem;
   }
 
   .section-title {
