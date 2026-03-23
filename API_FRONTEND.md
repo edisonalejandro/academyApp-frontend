@@ -2,7 +2,8 @@
 
 **Versión backend**: Spring Boot 3.5.11 | Java 21  
 **Base de datos**: PostgreSQL  
-**Fecha**: 23 de marzo de 2026
+**Fecha**: 23 de marzo de 2026  
+**Fase 2 añadida**: Sesiones de clase y Asistencias
 
 ---
 
@@ -652,6 +653,226 @@ Historial de pagos del usuario autenticado.
 
 ---
 
+### 10. Sesiones de Clase — `/api/class-sessions`
+
+> Los endpoints de consulta (`GET`) son accesibles a **cualquier usuario autenticado**.  
+> Las operaciones de escritura y cambio de estado requieren rol `ADMIN` o `TEACHER`.
+
+| Método    | Endpoint                                   | Roles               | Descripción |
+| --------- | ------------------------------------------ | ------------------- | ----------- |
+| `GET`     | `/api/class-sessions/course/{courseId}`    | Autenticado         | Todas las sesiones de un curso |
+| `GET`     | `/api/class-sessions/{id}`                 | Autenticado         | Sesión por ID |
+| `GET`     | `/api/class-sessions/upcoming/{courseId}`  | Autenticado         | Próximas sesiones programadas de un curso |
+| `GET`     | `/api/class-sessions/calendar?from=&to=`   | Autenticado         | Sesiones en rango de fechas (calendario) |
+| `GET`     | `/api/class-sessions/teacher/{teacherId}`  | ADMIN, TEACHER      | Sesiones de un profesor |
+| `GET`     | `/api/class-sessions`                      | ADMIN, TEACHER      | Todas las sesiones |
+| `POST`    | `/api/class-sessions`                      | ADMIN, TEACHER      | Crear sesión |
+| `PUT`     | `/api/class-sessions/{id}`                 | ADMIN, TEACHER      | Actualizar sesión |
+| `PATCH`   | `/api/class-sessions/{id}/cancel`          | ADMIN, TEACHER      | Cancelar sesión |
+| `PATCH`   | `/api/class-sessions/{id}/start`           | ADMIN, TEACHER      | Marcar sesión como iniciada |
+| `PATCH`   | `/api/class-sessions/{id}/complete`        | ADMIN, TEACHER      | Marcar sesión como completada |
+
+**Objeto `ClassSessionDTO`**
+```json
+{
+  "id": 1,
+  "courseId": 1,
+  "courseName": "Salsa Básica para Principiantes",
+  "courseCode": "SAL-B-001",
+  "teacherId": 2,
+  "teacherName": "Pedro Gómez",
+  "teacherEmail": "pedro@academia.com",
+  "sessionName": "Clase 1 — Pasos Básicos",
+  "description": "Introducción a los pasos fundamentales de la salsa",
+  "scheduledDate": "2026-04-01T18:00:00",
+  "actualStartTime": null,
+  "actualEndTime": null,
+  "plannedDuration": 1.5,
+  "actualDuration": null,
+  "status": "SCHEDULED",
+  "maxCapacity": 20,
+  "location": "Sala A",
+  "topic": "Pasos básicos y postura",
+  "requiredMaterials": "Zapatos de baile",
+  "teacherNotes": null,
+  "virtualMeetingUrl": null,
+  "isVirtual": false,
+  "isRecurring": false,
+  "parentClassId": null,
+  "difficultyLevel": null,
+  "specialRequirements": null,
+  "cancellationReason": null,
+  "createdAt": "2026-03-23T20:00:00",
+  "updatedAt": "2026-03-23T20:00:00",
+  "attendanceCount": 15,
+  "availableSpots": 5
+}
+```
+
+> `attendanceCount` y `availableSpots` son campos **calculados** (sólo lectura).
+
+**Request `POST /api/class-sessions`** (campos mínimos requeridos)
+```json
+{
+  "courseId": 1,
+  "teacherId": 2,
+  "sessionName": "Clase 1 — Pasos Básicos",
+  "scheduledDate": "2026-04-01T18:00:00",
+  "plannedDuration": 1.5,
+  "maxCapacity": 20,
+  "location": "Sala A",
+  "isVirtual": false
+}
+```
+
+**Request `PATCH /api/class-sessions/{id}/cancel`** (body opcional)
+```json
+{ "reason": "El profesor no puede asistir" }
+```
+
+> `PATCH /start` pone la sesión en `IN_PROGRESS` y registra `actualStartTime = ahora`.  
+> `PATCH /complete` pone la sesión en `COMPLETED`, registra `actualEndTime` y calcula `actualDuration` automáticamente.
+
+**Parámetros para el calendario**
+```
+GET /api/class-sessions/calendar?from=2026-04-01T00:00:00&to=2026-04-30T23:59:59
+```
+> `from` y `to` deben tener formato ISO 8601 (`yyyy-MM-ddTHH:mm:ss`).
+
+---
+
+### 11. Asistencias — `/api/attendances`
+
+> Todos los endpoints requieren `Authorization: Bearer <token>` con rol `ADMIN` o `TEACHER`,  
+> excepto las consultas de tasa de asistencia propia en contextos autorizados.
+
+| Método  | Endpoint                                          | Roles          | Descripción |
+| ------- | ------------------------------------------------- | -------------- | ----------- |
+| `POST`  | `/api/attendances`                                | ADMIN, TEACHER | Registrar asistencia |
+| `PUT`   | `/api/attendances/{id}`                           | ADMIN, TEACHER | Actualizar estado de asistencia |
+| `GET`   | `/api/attendances/session/{sessionId}`            | ADMIN, TEACHER | Asistencias de una sesión |
+| `GET`   | `/api/attendances/student/{studentId}`            | ADMIN, TEACHER | Historial de asistencias de un estudiante |
+| `GET`   | `/api/attendances/student/{studentId}/rate`       | ADMIN, TEACHER | Porcentaje de asistencia de un estudiante |
+| `GET`   | `/api/attendances/student/{studentId}/check/{classSessionId}` | ADMIN, TEACHER | Verificar si el estudiante tiene registro en una sesión |
+| `GET`   | `/api/attendances/report?from=&to=`               | ADMIN          | Reporte completo de asistencias |
+| `GET`   | `/api/attendances/low-attendance?minPercentage=`  | ADMIN, TEACHER | Estudiantes con baja asistencia |
+
+**Request `POST /api/attendances`**
+```json
+{
+  "studentId": 1,
+  "classSessionId": 1,
+  "attended": true,
+  "notes": "Llegó con 5 minutos de retraso"
+}
+```
+
+> Si ya existe un registro para esa combinación `studentId + classSessionId`, se **actualiza** en lugar de crear uno nuevo (idempotente).
+
+**Request `PUT /api/attendances/{id}`**
+```json
+{
+  "attended": false,
+  "notes": "Falta justificada por enfermedad"
+}
+```
+
+**Objeto `AttendanceDTO`**
+```json
+{
+  "id": 1,
+  "studentId": 1,
+  "studentName": "Ana García",
+  "studentEmail": "ana.garcia@email.com",
+  "classSessionId": 1,
+  "sessionName": "Clase 1 — Pasos Básicos",
+  "scheduledDate": "2026-04-01T18:00:00",
+  "courseId": 1,
+  "courseName": "Salsa Básica para Principiantes",
+  "attended": true,
+  "isLate": false,
+  "isExcused": false,
+  "attendanceDate": "2026-04-01T18:03:00",
+  "arrivalTime": null,
+  "departureTime": null,
+  "notes": null,
+  "recordedBy": "pedro@academia.com",
+  "createdAt": "2026-04-01T18:03:00",
+  "updatedAt": "2026-04-01T18:03:00"
+}
+```
+
+**Response `GET /api/attendances/student/{studentId}/rate`**
+```json
+{
+  "studentId": 1,
+  "attendanceRate": 85.7
+}
+```
+
+**Response `GET /api/attendances/student/{studentId}/check/{classSessionId}`**
+```json
+{ "hasRecord": true }
+```
+
+**Response `GET /api/attendances/report?from=&to=`**
+```json
+{
+  "reportDate": "2026-04-30T23:59:59",
+  "periodStart": "2026-04-01T00:00:00",
+  "periodEnd": "2026-04-30T23:59:59",
+  "totalClasses": 12,
+  "totalAttendances": 180,
+  "totalAbsences": 20,
+  "overallAttendanceRate": 90.0,
+  "courseStats": [
+    {
+      "courseId": 1,
+      "courseName": "Salsa Básica para Principiantes",
+      "totalSessions": 8,
+      "totalAttendances": 120,
+      "totalAbsences": 10,
+      "attendanceRate": 92.3
+    }
+  ],
+  "studentStats": [
+    {
+      "studentId": 1,
+      "firstName": "Ana",
+      "lastName": "García",
+      "email": "ana.garcia@email.com",
+      "totalClasses": 8,
+      "classesAttended": 7,
+      "classesMissed": 1,
+      "attendanceRate": 87.5,
+      "riskLevel": "LOW"
+    }
+  ],
+  "lowAttendanceStudents": [],
+  "topAttendanceStudents": []
+}
+```
+
+> `riskLevel` puede ser `LOW` (≥ 80%), `MEDIUM` (≥ 60%) o `HIGH` (< 60%).
+
+**Response `GET /api/attendances/low-attendance?minPercentage=75`**
+
+Devuelve la lista de estudiantes cuya tasa de asistencia (en los últimos 3 meses) está por debajo de `minPercentage`. Default: `75.0`.
+
+```json
+[
+  {
+    "studentId": 5,
+    "firstName": "Carlos",
+    "lastName": "López",
+    "email": "carlos@email.com",
+    "attendanceRate": 62.5
+  }
+]
+```
+
+---
+
 ## 📦 Enumeraciones (valores aceptados por la API)
 
 ### `StudentCategory`
@@ -717,6 +938,16 @@ Historial de pagos del usuario autenticado.
 | `GRADUATED`   | Graduado |
 | `DROPPED_OUT` | Abandonó |
 | `ON_HOLD`     | En espera |
+
+### `ClassStatus`
+| Valor          | Descripción |
+|----------------|-------------|
+| `SCHEDULED`    | Programada — aún no iniciada |
+| `IN_PROGRESS`  | En curso — iniciada con `PATCH /start` |
+| `COMPLETED`    | Completada — finalizada con `PATCH /complete` |
+| `CANCELLED`    | Cancelada — finalizada con `PATCH /cancel` |
+| `POSTPONED`    | Pospuesta |
+| `NO_SHOW`      | Sin asistencia del profesor |
 
 ---
 
@@ -792,6 +1023,40 @@ El backend responde con estos códigos HTTP estándar:
 4. GET  /api/enrollments/course/{id}    🔒       → ver inscritos de un curso
 5. GET  /api/courses/all                🔒       → ver todos los cursos (activos + inactivos)
 6. PATCH /api/courses/{id}/toggle-status 🔒      → activar/desactivar curso
+```
+
+### Flujo 5 — Gestión de sesiones de clase (TEACHER / ADMIN)
+
+```
+1. POST /api/auth/login (TEACHER)                        → obtener token
+2. GET  /api/class-sessions/course/{courseId}   🔒       → ver todas las sesiones del curso
+3. POST /api/class-sessions                     🔒       → crear nueva sesión
+4. GET  /api/class-sessions/upcoming/{courseId} 🔒       → ver próximas sesiones
+5. PATCH /api/class-sessions/{id}/start         🔒       → marcar sesión iniciada (en vivo)
+6. POST /api/attendances                        🔒       → registrar asistencia por estudiante
+7. PATCH /api/class-sessions/{id}/complete      🔒       → cerrar sesión (calcula duración)
+```
+
+### Flujo 6 — Seguimiento de asistencias (ADMIN)
+
+```
+1. POST /api/auth/login (ADMIN)                            → obtener token
+2. GET  /api/attendances/session/{sessionId}      🔒       → asistentes de una sesión
+3. PUT  /api/attendances/{id}                     🔒       → corregir registro de asistencia
+4. GET  /api/attendances/student/{studentId}/rate 🔒       → ver % de asistencia del estudiante
+5. GET  /api/attendances/low-attendance?minPercentage=75 🔒 → detectar estudiantes en riesgo
+6. GET  /api/attendances/report?from=&to=         🔒       → reporte completo del período
+```
+
+### Flujo 7 — Calendario de clases (vista pública autenticada)
+
+```
+1. POST /api/auth/login                                     → obtener token
+2. GET  /api/class-sessions/calendar               🔒
+           ?from=2026-04-01T00:00:00
+           &to=2026-04-30T23:59:59                          → sesiones del mes
+3. GET  /api/class-sessions/{id}                   🔒       → detalle de una sesión
+4. GET  /api/class-sessions/upcoming/{courseId}    🔒       → próximas clases de mi curso
 ```
 
 ---

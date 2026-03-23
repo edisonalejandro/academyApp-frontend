@@ -8,3 +8,5 @@ export * from './test.service';
 export * from './course.service';
 export * from './student.service';
 export * from './enrollment.service';
+export * from './class-session.service';
+export * from './attendance.service';

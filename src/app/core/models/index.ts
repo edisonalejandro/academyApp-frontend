@@ -75,6 +75,15 @@ export enum StudentStatus {
   ON_HOLD = 'ON_HOLD'
 }
 
+export enum ClassStatus {
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  POSTPONED = 'POSTPONED',
+  NO_SHOW = 'NO_SHOW'
+}
+
 // ========================================
 // AUTENTICACIÓN
 // ========================================
@@ -358,6 +367,138 @@ export interface EnrollmentSummaryResponse {
 
 export interface EnrollmentCancelRequest {
   reason?: string;
+}
+
+// ========================================
+// SESIONES DE CLASE
+// ========================================
+
+export interface ClassSessionDTO {
+  id: number;
+  courseId: number;
+  courseName: string;
+  courseCode: string;
+  teacherId: number;
+  teacherName: string;
+  teacherEmail: string;
+  sessionName: string;
+  description?: string;
+  scheduledDate: string;
+  actualStartTime?: string;
+  actualEndTime?: string;
+  plannedDuration: number;
+  actualDuration?: number;
+  status: ClassStatus;
+  maxCapacity: number;
+  location: string;
+  topic?: string;
+  requiredMaterials?: string;
+  teacherNotes?: string;
+  virtualMeetingUrl?: string;
+  isVirtual: boolean;
+  isRecurring: boolean;
+  parentClassId?: number;
+  difficultyLevel?: string;
+  specialRequirements?: string;
+  cancellationReason?: string;
+  createdAt: string;
+  updatedAt: string;
+  attendanceCount?: number;
+  availableSpots?: number;
+}
+
+export interface ClassSessionCancelRequest {
+  reason?: string;
+}
+
+// ========================================
+// ASISTENCIAS
+// ========================================
+
+export interface AttendanceDTO {
+  id: number;
+  studentId: number;
+  studentName: string;
+  studentEmail: string;
+  classSessionId: number;
+  sessionName: string;
+  scheduledDate: string;
+  courseId: number;
+  courseName: string;
+  attended: boolean;
+  isLate?: boolean;
+  isExcused?: boolean;
+  attendanceDate?: string;
+  arrivalTime?: string;
+  departureTime?: string;
+  notes?: string;
+  recordedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttendanceCreateRequest {
+  studentId: number;
+  classSessionId: number;
+  attended: boolean;
+  notes?: string;
+}
+
+export interface AttendanceUpdateRequest {
+  attended: boolean;
+  notes?: string;
+}
+
+export interface AttendanceRateResponse {
+  studentId: number;
+  attendanceRate: number;
+}
+
+export interface AttendanceCheckResponse {
+  hasRecord: boolean;
+}
+
+export interface AttendanceReportResponse {
+  reportDate: string;
+  periodStart: string;
+  periodEnd: string;
+  totalClasses: number;
+  totalAttendances: number;
+  totalAbsences: number;
+  overallAttendanceRate: number;
+  courseStats: AttendanceCourseStats[];
+  studentStats: AttendanceStudentStats[];
+  lowAttendanceStudents: any[];
+  topAttendanceStudents: any[];
+}
+
+export interface AttendanceCourseStats {
+  courseId: number;
+  courseName: string;
+  totalSessions: number;
+  totalAttendances: number;
+  totalAbsences: number;
+  attendanceRate: number;
+}
+
+export interface AttendanceStudentStats {
+  studentId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  totalClasses: number;
+  classesAttended: number;
+  classesMissed: number;
+  attendanceRate: number;
+  riskLevel: string;
+}
+
+export interface LowAttendanceStudent {
+  studentId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  attendanceRate: number;
 }
 
 // ========================================
