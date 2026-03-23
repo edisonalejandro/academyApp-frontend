@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+  private router = inject(Router);
+  public authService = inject(AuthService);
+  
   isMenuOpen = false;
 
   toggleMenu() {
@@ -24,5 +28,20 @@ export class HeaderComponent {
   closeMenu() {
     this.isMenuOpen = false;
     document.body.style.overflow = 'auto';
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.closeMenu();
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Error al cerrar sesión:', err);
+        // Limpiar de todas formas
+        this.closeMenu();
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

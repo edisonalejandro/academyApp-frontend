@@ -33,15 +33,27 @@
 
     <!-- Botones de acción -->
     <div class="action-buttons">
-      <button class="btn-login" routerLink="/auth/login">
-        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-        Entrar
-      </button>
-      <button class="btn-register" routerLink="/auth/register">
-        Reservar Clase
-      </button>
+      @if (authService.isAuthenticated()) {
+        <span class="user-greeting">
+          Hola, {{ authService.currentUser()?.firstName || 'Usuario' }}
+        </span>
+        <button class="btn-logout" (click)="logout()">
+          <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Cerrar Sesión
+        </button>
+      } @else {
+        <button class="btn-login" routerLink="/auth/login">
+          <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          Entrar
+        </button>
+        <button class="btn-register" routerLink="/auth/register">
+          Reservar Clase
+        </button>
+      }
     </div>
 
     <!-- Botón menú móvil -->
@@ -92,12 +104,21 @@
         Contacto
       </a>
       <div class="mobile-actions">
-        <button class="mobile-btn-login" routerLink="/auth/login" (click)="closeMenu()">
-          Iniciar Sesión
-        </button>
-        <button class="mobile-btn-register" routerLink="/auth/register" (click)="closeMenu()">
-          Reservar Clase
-        </button>
+        @if (authService.isAuthenticated()) {
+          <div class="mobile-user-info">
+            <span class="mobile-user-greeting">Hola, {{ authService.currentUser()?.firstName || 'Usuario' }}</span>
+          </div>
+          <button class="mobile-btn-logout" (click)="logout()">
+            Cerrar Sesión
+          </button>
+        } @else {
+          <button class="mobile-btn-login" routerLink="/auth/login" (click)="closeMenu()">
+            Iniciar Sesión
+          </button>
+          <button class="mobile-btn-register" routerLink="/auth/register" (click)="closeMenu()">
+            Reservar Clase
+          </button>
+        }
       </div>
     </nav>
   </div>
