@@ -139,7 +139,7 @@
 .section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-text-light);
+  color: white;
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
