@@ -1,0 +1,102 @@
+<div class="teacher-form-container">
+  <h2 mat-dialog-title>
+    <mat-icon>{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+    {{ isEditMode ? 'Editar Profesor' : 'Nuevo Profesor' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="teacherForm" class="teacher-form">
+      <!-- Fila 1: Nombre y Apellido -->
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="firstName" placeholder="Juan">
+          <mat-icon matPrefix>person</mat-icon>
+          @if (teacherForm.get('firstName')?.invalid && teacherForm.get('firstName')?.touched) {
+            <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input matInput formControlName="lastName" placeholder="Pérez">
+          <mat-icon matPrefix>person</mat-icon>
+          @if (teacherForm.get('lastName')?.invalid && teacherForm.get('lastName')?.touched) {
+            <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 2: Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="profesor@academia.com">
+        <mat-icon matPrefix>email</mat-icon>
+        @if (teacherForm.get('email')?.invalid && teacherForm.get('email')?.touched) {
+          <mat-error>{{ getErrorMessage('email') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 3: Contraseña (solo en modo creación, opcional en edición) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ isEditMode ? 'Contraseña (dejar en blanco para no cambiar)' : 'Contraseña' }}</mat-label>
+        <input matInput type="password" formControlName="password" 
+               [placeholder]="isEditMode ? 'Nueva contraseña' : 'Mínimo 6 caracteres'">
+        <mat-icon matPrefix>lock</mat-icon>
+        @if (teacherForm.get('password')?.invalid && teacherForm.get('password')?.touched) {
+          <mat-error>{{ getErrorMessage('password') }}</mat-error>
+        }
+        @if (!isEditMode) {
+          <mat-hint>Mínimo 6 caracteres</mat-hint>
+        }
+      </mat-form-field>
+
+      <!-- Fila 4: Teléfono (opcional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono (opcional)</mat-label>
+        <input matInput type="tel" formControlName="phone" placeholder="+56 9 1234 5678">
+        <mat-icon matPrefix>phone</mat-icon>
+        @if (teacherForm.get('phone')?.invalid && teacherForm.get('phone')?.touched) {
+          <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 5: Estado activo -->
+      <div class="checkbox-row">
+        <mat-checkbox formControlName="isActive" color="primary">
+          <span class="checkbox-label">
+            <mat-icon>check_circle</mat-icon>
+            Usuario activo
+          </span>
+        </mat-checkbox>
+      </div>
+
+      @if (isEditMode) {
+        <div class="info-message">
+          <mat-icon>info</mat-icon>
+          <p>Los roles del profesor se gestionan desde el sistema de administración de usuarios.</p>
+        </div>
+      }
+
+      @if (!isEditMode) {
+        <div class="info-message">
+          <mat-icon>info</mat-icon>
+          <p>El nuevo usuario será creado con rol de <strong>TEACHER</strong> por defecto. Los roles pueden modificarse posteriormente desde el sistema de administración.</p>
+        </div>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" type="button" 
+            (click)="onSubmit()" 
+            [disabled]="teacherForm.invalid">
+      <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Profesor' }}
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,148 @@
+<div class="teachers-container">
+  <div class="header-section">
+    <h1 class="page-title">
+      <mat-icon>school</mat-icon>
+      Gestión de Profesores
+    </h1>
+    <p class="page-subtitle">Administra el equipo de profesores de la academia</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Cargando profesores...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="loadTeachers()">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  @if (!isLoading() && !error()) {
+    @if (teachers().length === 0) {
+      <div class="empty-state">
+        <mat-icon>person_off</mat-icon>
+        <h2>No hay profesores registrados</h2>
+        <p>No se encontraron profesores en este momento.</p>
+        @if (authService.isAdmin()) {
+          <button mat-raised-button color="primary" (click)="openCreateTeacherDialog()">
+            <mat-icon>add</mat-icon>
+            Agregar Primer Profesor
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="teachers-grid">
+        @for (teacher of teachers(); track teacher.id) {
+          <mat-card class="teacher-card" [class.inactive]="!teacher.isActive">
+            <!-- Badge de estado inactivo (solo visible para admin) -->
+            @if (!teacher.isActive && authService.isAdmin()) {
+              <div class="inactive-badge">
+                <mat-chip color="warn" selected>INACTIVO</mat-chip>
+              </div>
+            }
+
+            <mat-card-header>
+              <div class="avatar-container">
+                <div class="avatar">
+                  <mat-icon>person</mat-icon>
+                </div>
+              </div>
+              <div class="card-header-content">
+                <mat-card-title>{{ teacher.firstName }} {{ teacher.lastName }}</mat-card-title>
+                <mat-card-subtitle>{{ teacher.email }}</mat-card-subtitle>
+              </div>
+              <div class="card-badges">
+                <mat-chip [color]="getRoleColor(teacher)" selected>
+                  {{ getRoleLabel(teacher) }}
+                </mat-chip>
+              </div>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="teacher-info">
+                @if (teacher.phone) {
+                  <div class="info-row">
+                    <mat-icon class="info-icon">phone</mat-icon>
+                    <span class="info-label">Teléfono:</span>
+                    <span class="info-value">{{ teacher.phone }}</span>
+                  </div>
+                }
+
+                <div class="info-row">
+                  <mat-icon class="info-icon">event</mat-icon>
+                  <span class="info-label">Registrado:</span>
+                  <span class="info-value">{{ formatDate(teacher.createdAt) }}</span>
+                </div>
+
+                <div class="info-row">
+                  <mat-icon class="info-icon">update</mat-icon>
+                  <span class="info-label">Actualizado:</span>
+                  <span class="info-value">{{ formatDate(teacher.updatedAt) }}</span>
+                </div>
+
+                <div class="info-row">
+                  <mat-icon class="info-icon" [style.color]="teacher.isActive ? 'green' : 'red'">
+                    {{ teacher.isActive ? 'check_circle' : 'cancel' }}
+                  </mat-icon>
+                  <span class="info-label">Estado:</span>
+                  <span class="info-value" [style.color]="teacher.isActive ? 'green' : 'red'">
+                    {{ teacher.isActive ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <!-- Botones para administradores -->
+              @if (authService.isAdmin()) {
+                <div class="admin-actions">
+                  <button mat-raised-button color="primary" (click)="openEditTeacherDialog(teacher)">
+                    <mat-icon>edit</mat-icon>
+                    Editar
+                  </button>
+                  <button mat-raised-button (click)="toggleTeacherStatus(teacher)"
+                          [color]="teacher.isActive ? 'warn' : 'accent'">
+                    <mat-icon>{{ teacher.isActive ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    {{ teacher.isActive ? 'Desactivar' : 'Activar' }}
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteTeacher(teacher)"
+                          matTooltip="Eliminar profesor">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <!-- Botones para usuarios no admin -->
+              @if (!authService.isAdmin()) {
+                <button mat-raised-button color="primary">
+                  <mat-icon>info</mat-icon>
+                  Ver Perfil
+                </button>
+                <button mat-button>
+                  <mat-icon>email</mat-icon>
+                  Contactar
+                </button>
+              }
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+
+  <!-- Botón flotante para crear profesor (solo admin) -->
+  @if (authService.isAdmin() && !isLoading() && !error()) {
+    <button mat-fab class="fab-add-teacher" color="primary" 
+            (click)="openCreateTeacherDialog()"
+            matTooltip="Agregar nuevo profesor">
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+</div>

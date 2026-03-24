@@ -37,6 +37,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/courses/courses.component').then(c => c.CoursesComponent)
     // Público - todos pueden ver el catálogo de cursos
   },
+  {
+    path: 'profesores',
+    loadComponent: () => import('./features/teachers/teachers.component').then(c => c.TeachersComponent),
+    canActivate: [adminGuard]
+    // Solo administradores pueden gestionar profesores
+  },
   // Rutas para Admin
   //{
   //  path: 'users',
