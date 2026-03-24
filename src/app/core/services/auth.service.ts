@@ -26,13 +26,20 @@ export class AuthService {
   public isAuthenticated = this.isAuthenticatedSignal.asReadonly();
   public isLoading = this.isLoadingSignal.asReadonly();
   
-  // Computed para roles (formato ROLE_XXX según la API)
+  // Computed para roles (acepta tanto ADMIN como ROLE_ADMIN)
   public userRoles = computed(() => this.currentUserSignal()?.roles || []);
-  public isAdmin = computed(() => this.userRoles().includes('ROLE_ADMIN'));
-  public isTeacher = computed(() => 
-    this.userRoles().includes('ROLE_TEACHER') || this.isAdmin()
-  );
-  public isStudent = computed(() => this.userRoles().includes('ROLE_STUDENT'));
+  public isAdmin = computed(() => {
+    const roles = this.userRoles();
+    return roles.includes('ROLE_ADMIN') || roles.includes('ADMIN');
+  });
+  public isTeacher = computed(() => {
+    const roles = this.userRoles();
+    return roles.includes('ROLE_TEACHER') || roles.includes('TEACHER') || this.isAdmin();
+  });
+  public isStudent = computed(() => {
+    const roles = this.userRoles();
+    return roles.includes('ROLE_STUDENT') || roles.includes('STUDENT');
+  });
   
   // Información del usuario
   public userId = computed(() => this.currentUserSignal()?.id);
