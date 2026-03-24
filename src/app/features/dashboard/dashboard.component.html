@@ -1,1 +1,216 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="welcome-header">
+    <div class="welcome-content">
+      <h1 class="welcome-title">
+        <mat-icon class="welcome-icon">waving_hand</mat-icon>
+        ¡Hola, {{ currentUser()?.firstName }}!
+      </h1>
+      <p class="welcome-subtitle">
+        @if (authService.isAdmin()) {
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Panel de Administración</span>
+        }
+        @if (authService.isTeacher()) {
+          <mat-icon>school</mat-icon>
+          <span>Panel de Profesor</span>
+        }
+        @if (authService.isStudent()) {
+          <mat-icon>person</mat-icon>
+          <span>Panel de Estudiante</span>
+        }
+      </p>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Stats Section - Solo para Admin y Teacher -->
+    @if (authService.isAdmin() || authService.isTeacher()) {
+      <div class="stats-section">
+        <div class="stat-card stat-primary">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">people</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">{{ stats.totalUsers }}</span>
+            <span class="stat-label">Total Usuarios</span>
+          </div>
+        </div>
+        
+        <div class="stat-card stat-success">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">class</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">{{ stats.totalClasses }}</span>
+            <span class="stat-label">Clases Activas</span>
+          </div>
+        </div>
+        
+        <div class="stat-card stat-warning">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">attach_money</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">{{ stats.monthlyRevenue | currency:'USD':'symbol':'1.0-0' }}</span>
+            <span class="stat-label">Ingresos del Mes</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Action Cards Section -->
+    <div class="actions-section">
+      <h2 class="section-title">
+        <mat-icon>dashboard</mat-icon>
+        Acceso Rápido
+      </h2>
+
+      <!-- Admin Cards -->
+      @if (authService.isAdmin()) {
+        <div class="cards-grid">
+          <mat-card class="action-card card-primary" (click)="navigateToUsers()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">people</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Gestión de Usuarios</h3>
+                <p class="card-description">Administrar profesores y alumnos</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+
+          <mat-card class="action-card card-success" (click)="navigateToPayments()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">attach_money</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Pagos y Finanzas</h3>
+                <p class="card-description">Reportes y transacciones</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+
+          <mat-card class="action-card card-warning" (click)="navigateToPricing()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">settings</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Configuración de Precios</h3>
+                <p class="card-description">Gestionar reglas de precios</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        </div>
+      }
+
+      <!-- Teacher Cards -->
+      @if (authService.isTeacher()) {
+        <div class="cards-grid">
+          <mat-card class="action-card card-info" (click)="navigateToClasses()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">class</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Mis Clases</h3>
+                <p class="card-description">Ver y gestionar tus clases</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+
+          <mat-card class="action-card card-purple" (click)="navigateToStudents()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">group</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Mis Estudiantes</h3>
+                <p class="card-description">Gestionar estudiantes inscritos</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        </div>
+      }
+
+      <!-- Student Cards -->
+      @if (authService.isStudent()) {
+        <div class="cards-grid">
+          <mat-card class="action-card card-info" (click)="navigateToMyClasses()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">schedule</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Mis Clases</h3>
+                <p class="card-description">Horarios y clases inscritas</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+
+          <mat-card class="action-card card-success" (click)="navigateToMyPayments()">
+            <div class="card-gradient"></div>
+            <div class="card-content">
+              <div class="card-icon-wrapper">
+                <mat-icon class="card-icon">payment</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">Mis Pagos</h3>
+                <p class="card-description">Historial de pagos y facturas</p>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        </div>
+      }
+
+      <!-- Card común para todos -->
+      <div class="cards-grid">
+        <mat-card class="action-card card-accent" (click)="navigateToPricingCalculator()">
+          <div class="card-gradient"></div>
+          <div class="card-content">
+            <div class="card-icon-wrapper">
+              <mat-icon class="card-icon">calculate</mat-icon>
+            </div>
+            <div class="card-text">
+              <h3 class="card-title">Calculadora de Precios</h3>
+              <p class="card-description">Consultar precios de clases</p>
+            </div>
+            <button mat-icon-button class="card-action">
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
