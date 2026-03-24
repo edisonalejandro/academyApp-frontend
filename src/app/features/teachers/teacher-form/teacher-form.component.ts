@@ -38,8 +38,7 @@ export class TeacherFormComponent implements OnInit {
   // Opciones de roles
   roles: { value: string; label: string }[] = [
     { value: 'TEACHER', label: 'Profesor' },
-    { value: 'ADMIN', label: 'Administrador' },
-    { value: 'STUDENT', label: 'Estudiante' }
+    { value: 'ADMIN', label: 'Administrador' }
   ];
 
   ngOnInit(): void {
@@ -55,6 +54,14 @@ export class TeacherFormComponent implements OnInit {
         isActive: this.data.teacher.isActive
       });
       
+      // Determinar el rol principal del usuario
+      const roles = this.data.teacher.roles || [];
+      if (roles.includes('ADMIN') || roles.includes('ROLE_ADMIN')) {
+        this.teacherForm.patchValue({ roleName: 'ADMIN' });
+      } else if (roles.includes('TEACHER') || roles.includes('ROLE_TEACHER')) {
+        this.teacherForm.patchValue({ roleName: 'TEACHER' });
+      }
+      
       // No mostramos el campo password en modo edición
       this.teacherForm.get('password')?.clearValidators();
       this.teacherForm.get('password')?.updateValueAndValidity();
@@ -68,6 +75,7 @@ export class TeacherFormComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]],
       phone: ['', [Validators.pattern(/^[0-9+\-\s()]+$/)]],
+      roleName: ['TEACHER', Validators.required],
       isActive: [true]
     });
   }
@@ -76,12 +84,13 @@ export class TeacherFormComponent implements OnInit {
     if (this.teacherForm.valid) {
       const formValue = this.teacherForm.value;
       
-      const teacherData: Partial<UserDTO> = {
+      const teacherData: Partial<UserDTO> & { roleName?: string } = {
         firstName: formValue.firstName,
         lastName: formValue.lastName,
         email: formValue.email,
         phone: formValue.phone || undefined,
-        isActive: formValue.isActive
+        isActive: formValue.isActive,
+        roleName: formValue.roleName
       };
 
       // Solo incluir password si está presente y no es modo edición, o si fue modificado

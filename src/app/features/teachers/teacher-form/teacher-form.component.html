@@ -61,7 +61,21 @@
         }
       </mat-form-field>
 
-      <!-- Fila 5: Estado activo -->
+      <!-- Fila 5: Rol -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="roleName">
+          @for (role of roles; track role.value) {
+            <mat-option [value]="role.value">{{ role.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>badge</mat-icon>
+        @if (teacherForm.get('roleName')?.invalid && teacherForm.get('roleName')?.touched) {
+          <mat-error>{{ getErrorMessage('roleName') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 6: Estado activo -->
       <div class="checkbox-row">
         <mat-checkbox formControlName="isActive" color="primary">
           <span class="checkbox-label">
@@ -71,17 +85,17 @@
         </mat-checkbox>
       </div>
 
-      @if (isEditMode) {
-        <div class="info-message">
-          <mat-icon>info</mat-icon>
-          <p>Los roles del profesor se gestionan desde el sistema de administración de usuarios.</p>
-        </div>
-      }
-
       @if (!isEditMode) {
         <div class="info-message">
           <mat-icon>info</mat-icon>
-          <p>El nuevo usuario será creado con rol de <strong>TEACHER</strong> por defecto. Los roles pueden modificarse posteriormente desde el sistema de administración.</p>
+          <p>El nuevo usuario será creado con el rol seleccionado. Los roles pueden modificarse posteriormente.</p>
+        </div>
+      }
+
+      @if (isEditMode) {
+        <div class="info-message">
+          <mat-icon>info</mat-icon>
+          <p>El rol del usuario será actualizado al guardar los cambios.</p>
         </div>
       }
     </form>

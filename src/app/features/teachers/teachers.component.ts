@@ -9,7 +9,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { switchMap, forkJoin } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
+import { RoleService } from '../../core/services/role.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UserDTO } from '../../core/models';
 import { TeacherFormComponent } from './teacher-form/teacher-form.component';
@@ -34,6 +36,7 @@ import { TeacherFormComponent } from './teacher-form/teacher-form.component';
 })
 export class TeachersComponent implements OnInit {
   private userService = inject(UserService);
+  private roleService = inject(RoleService);
   public authService = inject(AuthService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
@@ -97,9 +100,17 @@ export class TeachersComponent implements OnInit {
     });
   }
 
-  createTeacher(teacherData: Partial<UserDTO>): void {
-    this.userService.createUser(teacherData).subscribe({
-      next: (newTeacher) => {
+  createTeacher(teacherData: Partial<UserDTO> & { roleName?: string }): void {
+    const roleName = teacherData.roleName || 'TEACHER';
+    
+    // Primero crear el usuario
+    this.userService.createUser(teacherData).pipe(
+      switchMap(newUser => {
+        // Luego asignar el rol
+        return this.roleService.assignRole(newUser.id, roleName);
+      })
+    ).subscribe({
+      next: (userWithRole) => {
         this.snackBar.open('Profesor creado exitosamente', 'Cerrar', {
           duration: 3000,
           horizontalPosition: 'end',
@@ -118,8 +129,19 @@ export class TeachersComponent implements OnInit {
     });
   }
 
-  updateTeacher(id: number, teacherData: Partial<UserDTO>): void {
-    this.userService.updateUser(id, teacherData).subscribe({
+  updateTeacher(id: number, teacherData: Partial<UserDTO> & { roleName?: string }): void {
+    const roleName = teacherData.roleName;
+    
+    // Actualizar el usuario
+    this.userService.updateUser(id, teacherData).pipe(
+      switchMap(updatedUser => {
+        // Si se especificó un rol, asignarlo (esto reemplaza los roles existentes)
+        if (roleName) {
+          return this.roleService.assignRole(id, roleName);
+        }
+        return [updatedUser];
+      })
+    ).subscribe({
       next: (updatedTeacher) => {
         this.snackBar.open('Profesor actualizado exitosamente', 'Cerrar', {
           duration: 3000,
