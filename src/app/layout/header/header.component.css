@@ -379,6 +379,70 @@
   box-shadow: 0 6px 20px rgba(220, 53, 69, 0.5);
 }
 
+/* Estilos para el menú dropdown de Usuarios */
+.nav-menu-trigger {
+  background: transparent;
+  border: none;
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-menu-trigger:hover {
+  color: var(--color-primary);
+}
+
+.nav-menu-trigger::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.nav-menu-trigger:hover::after {
+  transform: scaleX(1);
+}
+
+.menu-arrow {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Estilos para el submenú en móvil */
+.mobile-submenu-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 1.5px;
+  padding: 1rem 1rem 0.5rem;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.mobile-nav-link.submenu-item {
+  padding-left: 2rem;
+  font-size: 0.95rem;
+  background: rgba(45, 90, 61, 0.05);
+}
+
+.mobile-nav-link.submenu-item:hover {
+  background: rgba(45, 90, 61, 0.15);
+  padding-left: 2.5rem;
+}
+
 .mobile-btn-register {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--color-white);

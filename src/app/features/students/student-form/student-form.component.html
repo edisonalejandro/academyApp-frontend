@@ -1,0 +1,95 @@
+<div class="student-form-container">
+  <h2 mat-dialog-title>
+    <mat-icon>{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+    {{ isEditMode ? 'Editar Alumno' : 'Nuevo Alumno' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="studentForm" class="student-form">
+      <!-- Fila 1: Nombre y Apellido -->
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="firstName" placeholder="María">
+          <mat-icon matPrefix>person</mat-icon>
+          @if (studentForm.get('firstName')?.invalid && studentForm.get('firstName')?.touched) {
+            <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input matInput formControlName="lastName" placeholder="González">
+          <mat-icon matPrefix>person</mat-icon>
+          @if (studentForm.get('lastName')?.invalid && studentForm.get('lastName')?.touched) {
+            <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 2: Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="alumno@email.com">
+        <mat-icon matPrefix>email</mat-icon>
+        @if (studentForm.get('email')?.invalid && studentForm.get('email')?.touched) {
+          <mat-error>{{ getErrorMessage('email') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 3: Contraseña (solo en modo creación, opcional en edición) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ isEditMode ? 'Contraseña (dejar en blanco para no cambiar)' : 'Contraseña' }}</mat-label>
+        <input matInput type="password" formControlName="password" 
+               [placeholder]="isEditMode ? 'Nueva contraseña' : 'Mínimo 6 caracteres'">
+        <mat-icon matPrefix>lock</mat-icon>
+        @if (studentForm.get('password')?.invalid && studentForm.get('password')?.touched) {
+          <mat-error>{{ getErrorMessage('password') }}</mat-error>
+        }
+        @if (!isEditMode) {
+          <mat-hint>Mínimo 6 caracteres</mat-hint>
+        }
+      </mat-form-field>
+
+      <!-- Fila 4: Teléfono (opcional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono (opcional)</mat-label>
+        <input matInput type="tel" formControlName="phone" placeholder="+56 9 1234 5678">
+        <mat-icon matPrefix>phone</mat-icon>
+        @if (studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched) {
+          <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Fila 5: Estado activo -->
+      <div class="checkbox-row">
+        <mat-checkbox formControlName="isActive" color="primary">
+          <span class="checkbox-label">
+            <mat-icon>check_circle</mat-icon>
+            Usuario activo
+          </span>
+        </mat-checkbox>
+      </div>
+
+      @if (!isEditMode) {
+        <div class="info-message">
+          <mat-icon>info</mat-icon>
+          <p>El nuevo alumno será creado con el rol de estudiante.</p>
+        </div>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" type="button" 
+            (click)="onSubmit()" 
+            [disabled]="studentForm.invalid">
+      <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Alumno' }}
+    </button>
+  </mat-dialog-actions>
+</div>

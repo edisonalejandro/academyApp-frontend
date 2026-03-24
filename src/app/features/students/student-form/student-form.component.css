@@ -1,0 +1,172 @@
+﻿.student-form-container {
+  padding: 0;
+}
+
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 24px 24px 16px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #2d5a3d;
+}
+
+h2[mat-dialog-title] mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+mat-dialog-content {
+  padding: 0 24px 24px;
+  max-height: calc(90vh - 150px);
+  overflow-y: auto;
+}
+
+.student-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-form-field mat-icon[matPrefix] {
+  margin-right: 8px;
+  color: #666;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.checkbox-label mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #2d5a3d;
+}
+
+.info-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  border-left: 4px solid #2d5a3d;
+  margin-top: 8px;
+}
+
+.info-message mat-icon {
+  color: #2d5a3d;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+}
+
+.info-message p {
+  margin: 0;
+  color: #2d5a3d;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.info-message strong {
+  font-weight: 700;
+  color: #1b4d2a;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+  gap: 12px;
+}
+
+mat-dialog-actions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+mat-dialog-actions button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  h2[mat-dialog-title] {
+    font-size: 20px;
+    padding: 16px 16px 12px;
+  }
+
+  mat-dialog-content {
+    padding: 0 16px 16px;
+  }
+
+  mat-dialog-actions {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+
+  .info-message {
+    padding: 10px 12px;
+  }
+
+  .info-message p {
+    font-size: 13px;
+  }
+}
+
+/* Estilos para campos invÃ¡lidos */
+mat-form-field.mat-form-field-invalid mat-icon[matPrefix] {
+  color: #f44336;
+}
+
+/* Animaciones */
+.student-form {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

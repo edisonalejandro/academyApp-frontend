@@ -38,10 +38,23 @@ export const routes: Routes = [
     // Público - todos pueden ver el catálogo de cursos
   },
   {
-    path: 'profesores',
-    loadComponent: () => import('./features/teachers/teachers.component').then(c => c.TeachersComponent),
-    canActivate: [adminGuard]
-    // Solo administradores pueden gestionar profesores
+    path: 'usuarios',
+    canActivate: [adminGuard],
+    children: [
+      {
+        path: 'profesores',
+        loadComponent: () => import('./features/teachers/teachers.component').then(c => c.TeachersComponent)
+      },
+      {
+        path: 'alumnos',
+        loadComponent: () => import('./features/students/students.component').then(c => c.StudentsComponent)
+      },
+      {
+        path: '',
+        redirectTo: 'profesores',
+        pathMatch: 'full'
+      }
+    ]
   },
   // Rutas para Admin
   //{
