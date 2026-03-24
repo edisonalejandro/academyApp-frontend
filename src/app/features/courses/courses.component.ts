@@ -45,14 +45,6 @@ export class CoursesComponent implements OnInit {
   error = signal<string | null>(null);
 
   ngOnInit(): void {
-    // Debug: Verificar roles del usuario
-    console.log('=== DEBUG COURSES COMPONENT ===');
-    console.log('Usuario actual:', this.authService.currentUser());
-    console.log('Roles:', this.authService.userRoles());
-    console.log('Es admin?:', this.authService.isAdmin());
-    console.log('Es autenticado?:', this.authService.isAuthenticated());
-    console.log('===============================');
-    
     this.loadCourses();
   }
 

@@ -1,18 +1,4 @@
 <div class="courses-container">
-  <!-- DEBUG INFO (temporal) -->
-  <div style="position: fixed; top: 100px; right: 20px; background: white; padding: 15px; border: 2px solid red; z-index: 9999; font-size: 12px; max-width: 300px;">
-    <strong>🔍 DEBUG INFO</strong><br>
-    Usuario: {{ authService.currentUser()?.firstName }}<br>
-    Roles Array: 
-    @for (role of authService.userRoles(); track $index) {
-      <span style="background: yellow; padding: 2px 4px; margin: 2px; display: inline-block;">"{{ role }}"</span>
-    }<br>
-    Es Admin?: <strong [style.color]="authService.isAdmin() ? 'green' : 'red'">{{ authService.isAdmin() }}</strong><br>
-    isLoading: {{ isLoading() }}<br>
-    error: {{ !!error() }}<br>
-    <strong>Mostrar FAB?: {{ authService.isAdmin() && !isLoading() && !error() }}</strong>
-  </div>
-  
   <div class="header-section">
     <h1 class="page-title">
       <mat-icon>school</mat-icon>
