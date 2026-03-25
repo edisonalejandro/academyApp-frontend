@@ -1,0 +1,166 @@
+<div class="my-classes-container">
+  <!-- Header -->
+  <div class="page-header">
+    <button mat-icon-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon class="title-icon">schedule</mat-icon>
+        Mis Clases
+      </h1>
+      <p class="page-subtitle">Clases en las que estás inscrito</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-container">
+      <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+      <p>Cargando tus clases...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !loading) {
+    <div class="error-container">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="loadMyClasses()">
+        <mat-icon>refresh</mat-icon>
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading && !error && enrollments.length === 0) {
+    <div class="empty-state">
+      <mat-icon class="empty-icon">class</mat-icon>
+      <h2>No tienes clases inscritas</h2>
+      <p>Todavía no estás inscrito en ninguna clase. Explora nuestro catálogo de cursos para comenzar.</p>
+      <button mat-raised-button color="primary" routerLink="/courses">
+        <mat-icon>explore</mat-icon>
+        Ver Cursos Disponibles
+      </button>
+    </div>
+  }
+
+  <!-- Classes Grid -->
+  @if (!loading && !error && enrollments.length > 0) {
+    <div class="classes-grid">
+      @for (enrollment of enrollments; track enrollment.id) {
+        <mat-card class="class-card">
+          <!-- Card Header -->
+          <mat-card-header>
+            <div class="card-header-content">
+              <div class="course-info">
+                <h3 class="course-title">{{ enrollment.courseName }}</h3>
+                <p class="course-code">{{ enrollment.courseCode }}</p>
+              </div>
+              <mat-chip [color]="getStatusColor(enrollment.status)" class="status-chip">
+                {{ getStatusLabel(enrollment.status) }}
+              </mat-chip>
+            </div>
+          </mat-card-header>
+
+          <mat-divider></mat-divider>
+
+          <mat-card-content>
+            <!-- Hours Progress -->
+            <div class="hours-section">
+              <div class="hours-header">
+                <span class="section-label">
+                  <mat-icon class="small-icon">access_time</mat-icon>
+                  Progreso de Horas
+                </span>
+                <span class="hours-text">
+                  <strong>{{ enrollment.usedHours }}</strong> / {{ enrollment.purchasedHours }} horas
+                </span>
+              </div>
+              <mat-progress-bar 
+                mode="determinate" 
+                [value]="getProgressPercentage(enrollment)"
+                [color]="enrollment.remainingHours > 5 ? 'primary' : 'warn'">
+              </mat-progress-bar>
+              <div class="remaining-hours">
+                <mat-icon [class.warning]="enrollment.remainingHours <= 5">
+                  {{ enrollment.remainingHours <= 5 ? 'warning' : 'check_circle' }}
+                </mat-icon>
+                <span [class.warning]="enrollment.remainingHours <= 5">
+                  {{ enrollment.remainingHours }} horas restantes
+                </span>
+              </div>
+            </div>
+
+            <mat-divider class="content-divider"></mat-divider>
+
+            <!-- Enrollment Details -->
+            <div class="details-grid">
+              <div class="detail-item">
+                <mat-icon class="detail-icon">event</mat-icon>
+                <div class="detail-content">
+                  <span class="detail-label">Fecha de inscripción</span>
+                  <span class="detail-value">{{ enrollment.enrollmentDate | date: 'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+
+              @if (enrollment.startDate) {
+                <div class="detail-item">
+                  <mat-icon class="detail-icon">play_circle</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Fecha de inicio</span>
+                    <span class="detail-value">{{ enrollment.startDate | date: 'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+              }
+
+              @if (enrollment.endDate) {
+                <div class="detail-item">
+                  <mat-icon class="detail-icon">stop_circle</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Fecha de fin</span>
+                    <span class="detail-value">{{ enrollment.endDate | date: 'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+              }
+
+              <div class="detail-item">
+                <mat-icon class="detail-icon">receipt</mat-icon>
+                <div class="detail-content">
+                  <span class="detail-label">Código de pago</span>
+                  <span class="detail-value">{{ enrollment.paymentCode }}</span>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <mat-icon class="detail-icon">attach_money</mat-icon>
+                <div class="detail-content">
+                  <span class="detail-label">Total pagado</span>
+                  <span class="detail-value detail-price">{{ enrollment.finalPrice | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+              </div>
+
+              @if (enrollment.discountPercentage > 0) {
+                <div class="detail-item">
+                  <mat-icon class="detail-icon discount">local_offer</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Descuento aplicado</span>
+                    <span class="detail-value discount">{{ enrollment.discountPercentage }}%</span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (enrollment.notes) {
+              <div class="notes-section">
+                <mat-icon class="small-icon">note</mat-icon>
+                <span class="notes-text">{{ enrollment.notes }}</span>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

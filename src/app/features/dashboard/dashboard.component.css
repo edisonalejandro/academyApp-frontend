@@ -4,7 +4,7 @@
 
 .dashboard-container {
   min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d5a3d 0%, #3d7a4d 100%);
   margin-top: 80px;
   padding-bottom: 4rem;
 }
@@ -14,7 +14,7 @@
    ======================================== */
 
 .welcome-header {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(45, 90, 61, 0.9) 0%, rgba(61, 122, 77, 0.9) 100%);
   padding: 3rem 2rem;
   text-align: center;
   color: white;
@@ -121,8 +121,8 @@
 }
 
 .stat-card.stat-primary {
-  --stat-color-start: #667eea;
-  --stat-color-end: #764ba2;
+  --stat-color-start: #2d5a3d;
+  --stat-color-end: #3d7a4d;
 }
 
 .stat-card.stat-success {
@@ -234,8 +234,8 @@
 }
 
 .action-card.card-primary {
-  --card-color-start: #667eea;
-  --card-color-end: #764ba2;
+  --card-color-start: #2d5a3d;
+  --card-color-end: #3d7a4d;
 }
 
 .action-card.card-success {

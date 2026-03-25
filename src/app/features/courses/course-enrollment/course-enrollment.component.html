@@ -1,0 +1,211 @@
+<div class="enrollment-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="header-icon">add_circle</mat-icon>
+      Inscripción a Clase
+    </h2>
+    <button mat-icon-button (click)="close()" class="close-button" [disabled]="loading()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="course-info-chip">
+    <mat-icon>school</mat-icon>
+    <span>{{ data.course.title }}</span>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress-indicator">
+    <div class="progress-step" [class.active]="getStepNumber() >= 1" [class.completed]="getStepNumber() > 1">
+      <div class="step-circle">1</div>
+      <span class="step-label">Categoría</span>
+    </div>
+    <div class="progress-line" [class.active]="getStepNumber() > 1"></div>
+    <div class="progress-step" [class.active]="getStepNumber() >= 2" [class.completed]="getStepNumber() > 2">
+      <div class="step-circle">2</div>
+      <span class="step-label">Paquete</span>
+    </div>
+    <div class="progress-line" [class.active]="getStepNumber() > 2"></div>
+    <div class="progress-step" [class.active]="getStepNumber() >= 3" [class.completed]="getStepNumber() > 3">
+      <div class="step-circle">3</div>
+      <span class="step-label">Pago</span>
+    </div>
+    <div class="progress-line" [class.active]="getStepNumber() > 3"></div>
+    <div class="progress-step" [class.active]="getStepNumber() >= 4">
+      <div class="step-circle">4</div>
+      <span class="step-label">Confirmar</span>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Procesando...</p>
+      </div>
+    }
+
+    <!-- Step 1: Category Selection -->
+    @if (!loading() && step() === 'category') {
+      <div class="step-content">
+        <h3 class="step-title">
+          <mat-icon>category</mat-icon>
+          Selecciona tu Categoría
+        </h3>
+        <div class="categories-grid">
+          @for (category of categories; track category.value) {
+            <div class="category-card" (click)="selectCategory(category.value)"
+                 [class.selected]="selectedCategory() === category.value">
+              <mat-icon class="category-icon">{{ category.icon }}</mat-icon>
+              <h4>{{ category.label }}</h4>
+              <p>{{ category.description }}</p>
+              <mat-icon class="check-icon">check_circle</mat-icon>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Step 2: Package Selection -->
+    @if (!loading() && step() === 'package' && pricingOptions()) {
+      <div class="step-content">
+        <h3 class="step-title">
+          <mat-icon>shopping_bag</mat-icon>
+          Elige tu Paquete de Clases
+        </h3>
+        <div class="packages-grid">
+          @for (option of pricingOptions()!.options; track option.pricingRuleId) {
+            <div class="package-card" (click)="selectOption(option)"
+                 [class.selected]="selectedOption()?.pricingRuleId === option.pricingRuleId"
+                 [class.recommended]="option.isRecommended">
+              @if (option.isRecommended) {
+                <div class="recommended-badge">
+                  <mat-icon>star</mat-icon>
+                  <span>Recomendado</span>
+                </div>
+              }
+              
+              <div class="package-header">
+                <h4>{{ option.name }}</h4>
+                <mat-chip color="primary" selected>{{ option.classQuantity }} clases</mat-chip>
+              </div>
+
+              <div class="package-pricing">
+                @if (option.discountPercentage > 0) {
+                  <span class="original-price">{{ formatPrice(option.originalPrice) }}</span>
+                  <div class="discount-badge">-{{ option.discountPercentage }}%</div>
+                }
+                <div class="final-price">{{ formatPrice(option.finalPrice) }}</div>
+                <div class="price-per-class">
+                  {{ formatPrice(option.pricePerClass) }} por clase
+                </div>
+              </div>
+
+              @if (option.savings > 0) {
+                <div class="savings-info">
+                  <mat-icon>savings</mat-icon>
+                  Ahorras {{ formatPrice(option.savings) }}
+                </div>
+              }
+
+              <mat-icon class="check-icon">check_circle</mat-icon>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Step 3: Payment Method -->
+    @if (!loading() && step() === 'payment') {
+      <div class="step-content">
+        <h3 class="step-title">
+          <mat-icon>payment</mat-icon>
+          Método de Pago
+        </h3>
+        <div class="payment-methods-grid">
+          @for (method of paymentMethods; track method.value) {
+            <div class="payment-method-card" (click)="selectPaymentMethod(method.value)"
+                 [class.selected]="selectedPaymentMethod() === method.value">
+              <mat-icon class="payment-icon">{{ method.icon }}</mat-icon>
+              <span>{{ method.label }}</span>
+              <mat-icon class="check-icon">check_circle</mat-icon>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Step 4: Confirmation -->
+    @if (!loading() && step() === 'confirm') {
+      <div class="step-content">
+        <h3 class="step-title">
+          <mat-icon>fact_check</mat-icon>
+          Confirmar Inscripción
+        </h3>
+
+        <div class="confirmation-details">
+          <div class="detail-section">
+            <h4>Resumen de la Inscripción</h4>
+            <div class="detail-row">
+              <span class="detail-label">Curso:</span>
+              <span class="detail-value">{{ data.course.title }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Categoría:</span>
+              <span class="detail-value">
+                {{ getCategoryLabel(selectedCategory()) }}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Paquete:</span>
+              <span class="detail-value">
+                {{ selectedOption()?.name }} ({{ selectedOption()?.classQuantity }} clases)
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Método de pago:</span>
+              <span class="detail-value">
+                {{ getPaymentMethodLabel(selectedPaymentMethod()) }}
+              </span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="detail-row total-row">
+              <span class="detail-label">Total:</span>
+              <span class="detail-value price">{{ formatPrice(selectedOption()!.finalPrice) }}</span>
+            </div>
+          </div>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>ID de Transacción (opcional)</mat-label>
+            <input matInput [(ngModel)]="transactionId" placeholder="Ej: TRX123456">
+            <mat-icon matPrefix>receipt_long</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Notas adicionales (opcional)</mat-label>
+            <textarea matInput [(ngModel)]="notes" rows="3"
+                      placeholder="Agrega cualquier información adicional..."></textarea>
+            <mat-icon matPrefix>note</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    @if (step() !== 'category') {
+      <button mat-button (click)="goBack()" [disabled]="loading()">
+        <mat-icon>arrow_back</mat-icon>
+        Atrás
+      </button>
+    }
+    <button mat-button (click)="close()" [disabled]="loading()">Cancelar</button>
+    @if (step() === 'confirm') {
+      <button mat-raised-button color="primary" (click)="confirmEnrollment()" [disabled]="loading()">
+        <mat-icon>check</mat-icon>
+        Confirmar Inscripción
+      </button>
+    }
+  </mat-dialog-actions>
+</div>

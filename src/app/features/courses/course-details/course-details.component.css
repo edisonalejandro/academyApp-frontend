@@ -1,0 +1,235 @@
+.course-details-dialog {
+  min-width: 600px;
+  max-width: 800px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.dialog-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  color: #2d5a3d;
+  font-size: 1.75rem;
+  flex: 1;
+}
+
+.header-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: #3d7a4d;
+}
+
+.close-button {
+  color: #666;
+}
+
+mat-dialog-content {
+  padding: 0 1.5rem 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.course-main-info {
+  margin-bottom: 1.5rem;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.course-code {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+mat-divider {
+  margin: 1.5rem 0;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.detail-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.detail-icon {
+  color: #3d7a4d;
+  font-size: 1.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.detail-value.price {
+  color: #3d7a4d;
+  font-size: 1.1rem;
+}
+
+.detail-value.available {
+  color: #4caf50;
+}
+
+.capacity-section {
+  margin: 1.5rem 0;
+}
+
+.capacity-section h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.capacity-bar {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.capacity-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2d5a3d, #3d7a4d);
+  transition: width 0.3s ease;
+}
+
+.capacity-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.capacity-info span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.capacity-info .enrolled {
+  color: #666;
+}
+
+.capacity-info .available {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.capacity-info mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.course-tabs {
+  margin-top: 1.5rem;
+}
+
+.tab-content {
+  padding: 1.5rem;
+  min-height: 150px;
+}
+
+.section-icon {
+  color: #3d7a4d;
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.description-text,
+.objectives-text,
+.prerequisites-text {
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.teacher-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.teacher-info h4 {
+  margin: 0;
+  color: #2d5a3d;
+  font-size: 1.3rem;
+}
+
+.teacher-info p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: #666;
+}
+
+.teacher-info mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+mat-dialog-actions {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .course-details-dialog {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-header h2 {
+    font-size: 1.3rem;
+  }
+}

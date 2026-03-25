@@ -99,3 +99,21 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Estilos para modales de Angular Material */
+.cdk-overlay-pane {
+  max-width: 100vw !important;
+}
+
+.cdk-global-overlay-wrapper {
+  display: flex !important;
+  position: absolute !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+/* Estilos específicos para diálogos grandes */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}

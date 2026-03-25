@@ -233,7 +233,7 @@ import { RegisterRequest } from '../../../core/models';
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #2d5a3d 0%, #3d7a4d 100%);
       padding: 20px;
     }
 
@@ -266,7 +266,7 @@ import { RegisterRequest } from '../../../core/models';
       font-size: 32px;
       width: 32px;
       height: 32px;
-      color: #667eea;
+      color: #2d5a3d;
     }
 
     .register-form {

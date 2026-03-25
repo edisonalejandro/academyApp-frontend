@@ -1,0 +1,148 @@
+<div class="course-details-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="header-icon">school</mat-icon>
+      {{ data.course.title }}
+    </h2>
+    <button mat-icon-button (click)="close()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <div class="course-main-info">
+      <div class="info-header">
+        <div class="course-code">
+          <mat-icon>qr_code</mat-icon>
+          <span>{{ data.course.code }}</span>
+        </div>
+        <mat-chip [color]="getDanceLevelColor(data.course.level)" selected>
+          {{ getDanceLevelLabel(data.course.level) }}
+        </mat-chip>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <mat-icon class="detail-icon">music_note</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Estilo de Baile</span>
+            <span class="detail-value">{{ getDanceTypeLabel(data.course.danceType) }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">person</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Profesor</span>
+            <span class="detail-value">{{ data.course.teacherName }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">schedule</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Duración</span>
+            <span class="detail-value">{{ formatDuration(data.course.durationHours) }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">attach_money</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Precio por Hora</span>
+            <span class="detail-value price">{{ formatPrice(data.course.pricePerHour) }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">groups</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Capacidad Máxima</span>
+            <span class="detail-value">{{ data.course.maxCapacity }} personas</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">event_available</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Cupos Disponibles</span>
+            <span class="detail-value available">
+              {{ data.course.availableSlots || data.course.maxCapacity }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="capacity-section">
+        <h3>Disponibilidad</h3>
+        <div class="capacity-bar">
+          <div class="capacity-fill" 
+               [style.width.%]="(data.course.activeEnrollments || 0) / data.course.maxCapacity * 100">
+          </div>
+        </div>
+        <div class="capacity-info">
+          <span class="enrolled">
+            <mat-icon>person_add</mat-icon>
+            {{ data.course.activeEnrollments || 0 }} inscritos
+          </span>
+          <span class="available">
+            <mat-icon>event_available</mat-icon>
+            {{ data.course.availableSlots || data.course.maxCapacity }} disponibles
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <mat-tab-group class="course-tabs">
+      <mat-tab label="Descripción">
+        <div class="tab-content">
+          <mat-icon class="section-icon">description</mat-icon>
+          <p class="description-text">
+            {{ data.course.description || 'No hay descripción disponible.' }}
+          </p>
+        </div>
+      </mat-tab>
+
+      @if (data.course.objectives) {
+        <mat-tab label="Objetivos">
+          <div class="tab-content">
+            <mat-icon class="section-icon">flag</mat-icon>
+            <p class="objectives-text">{{ data.course.objectives }}</p>
+          </div>
+        </mat-tab>
+      }
+
+      @if (data.course.prerequisites) {
+        <mat-tab label="Requisitos">
+          <div class="tab-content">
+            <mat-icon class="section-icon">checklist</mat-icon>
+            <p class="prerequisites-text">{{ data.course.prerequisites }}</p>
+          </div>
+        </mat-tab>
+      }
+
+      <mat-tab label="Información del Profesor">
+        <div class="tab-content">
+          <mat-icon class="section-icon">account_circle</mat-icon>
+          <div class="teacher-info">
+            <h4>{{ data.course.teacherName }}</h4>
+            <p><mat-icon>email</mat-icon> {{ data.course.teacherEmail }}</p>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Cerrar</button>
+    <button mat-raised-button color="primary" (click)="enroll()"
+            [disabled]="!data.course.isActive || (data.course.availableSlots || 0) === 0">
+      <mat-icon>add_circle</mat-icon>
+      Inscribirse Ahora
+    </button>
+  </mat-dialog-actions>
+</div>

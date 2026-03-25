@@ -84,11 +84,11 @@ export const routes: Routes = [
   //  loadChildren: () => import('./features/students/students.routes').then(r => r.studentsRoutes)
   //},
   //// Rutas para Student
-  //{
-  //  path: 'my-classes',
-  //  canActivate: [studentGuard],
-  //  loadChildren: () => import('./features/student/student.routes').then(r => r.studentRoutes)
-  //},
+  {
+    path: 'my-classes',
+    canActivate: [studentGuard],
+    loadComponent: () => import('./features/students/my-classes/my-classes.component').then(c => c.MyClassesComponent)
+  },
   //{
   //  path: 'my-payments',
   //  canActivate: [studentGuard],

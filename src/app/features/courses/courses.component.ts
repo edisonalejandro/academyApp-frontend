@@ -14,6 +14,8 @@ import { CourseService } from '../../core/services/course.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CourseDTO, DanceType, DanceLevel, CreateCourseDTO, UpdateCourseDTO } from '../../core/models';
 import { CourseFormComponent } from './course-form/course-form.component';
+import { CourseDetailsComponent } from './course-details/course-details.component';
+import { CourseEnrollmentComponent } from './course-enrollment/course-enrollment.component';
 
 @Component({
   selector: 'app-courses',
@@ -186,6 +188,41 @@ export class CoursesComponent implements OnInit {
         }
       });
     }
+  }
+
+  openCourseDetails(course: CourseDTO): void {
+    const dialogRef = this.dialog.open(CourseDetailsComponent, {
+      width: '800px',
+      maxHeight: '90vh',
+      data: { course }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'enroll') {
+        this.openEnrollmentDialog(result.course);
+      }
+    });
+  }
+
+  openEnrollmentDialog(course: CourseDTO): void {
+    const dialogRef = this.dialog.open(CourseEnrollmentComponent, {
+      width: '1000px',
+      maxHeight: '98vh',
+      disableClose: true,
+      data: { course }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.snackBar.open('¡Inscripción completada exitosamente!', 'Cerrar', {
+          duration: 5000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
+        this.loadCourses(); // Recargar para actualizar cupos disponibles
+      }
+    });
   }
 
   getDanceTypeLabel(danceType: DanceType): string {

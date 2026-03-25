@@ -17,11 +17,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   
   // Si existe token, agregarlo a los headers
   if (token && req.url.startsWith(environment.apiUrl)) {
+    const headers: { [key: string]: string } = {
+      Authorization: `Bearer ${token}`
+    };
+    
+    // Solo agregar Content-Type para peticiones que no sean GET
+    if (req.method !== 'GET') {
+      headers['Content-Type'] = 'application/json';
+    }
+    
     req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+      setHeaders: headers
     });
   }
   

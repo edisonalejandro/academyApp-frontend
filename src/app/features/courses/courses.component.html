@@ -112,11 +112,12 @@
               <!-- Botones para usuarios normales -->
               @if (!authService.isAdmin()) {
                 <button mat-raised-button color="primary" 
+                        (click)="openEnrollmentDialog(course)"
                         [disabled]="!course.isActive || (course.availableSlots || 0) === 0">
                   <mat-icon>add_circle</mat-icon>
                   Inscribirse
                 </button>
-                <button mat-button>
+                <button mat-button (click)="openCourseDetails(course)">
                   <mat-icon>info</mat-icon>
                   Ver Detalles
                 </button>
