@@ -1,0 +1,115 @@
+<div class="checkout-container">
+
+  <div class="checkout-header">
+    <a routerLink="/catalog/cart" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Volver al carrito
+    </a>
+    <h1>Finalizar compra</h1>
+  </div>
+
+  @if (cartService.cart().items.length === 0) {
+    <div class="empty-checkout">
+      <p>Tu carrito está vacío.</p>
+      <a routerLink="/catalog" class="btn-primary">Ver catálogo</a>
+    </div>
+  } @else {
+    <div class="checkout-layout">
+
+      <!-- FORMULARIO -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="checkout-form">
+
+        <section class="form-section">
+          <h2>Datos de contacto</h2>
+
+          <div class="form-grid">
+            <div class="field-group full-width">
+              <label>Nombre completo *</label>
+              <input type="text" formControlName="customerName" placeholder="Juan Pérez"/>
+              @if (f['customerName'].invalid && f['customerName'].touched) {
+                <span class="field-error">Nombre requerido (mín. 3 caracteres)</span>
+              }
+            </div>
+
+            <div class="field-group">
+              <label>Email *</label>
+              <input type="email" formControlName="customerEmail" placeholder="juan@ejemplo.com"/>
+              @if (f['customerEmail'].invalid && f['customerEmail'].touched) {
+                <span class="field-error">Email válido requerido</span>
+              }
+            </div>
+
+            <div class="field-group">
+              <label>Teléfono</label>
+              <input type="tel" formControlName="customerPhone" placeholder="+56 9 1234 5678"/>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Método de pago</h2>
+          <div class="payment-methods">
+            @for (pm of paymentMethods; track pm.value) {
+              <label class="payment-option" [class.selected]="form.value.paymentMethod === pm.value">
+                <input type="radio" formControlName="paymentMethod" [value]="pm.value"/>
+                <span class="pm-icon">{{ pm.icon }}</span>
+                <span class="pm-label">{{ pm.label }}</span>
+              </label>
+            }
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Dirección de entrega <span class="optional">(opcional)</span></h2>
+          <textarea formControlName="shippingAddress" rows="3"
+                    placeholder="Calle, número, ciudad... (si deseas que te lo enviemos)"></textarea>
+        </section>
+
+        <section class="form-section">
+          <h2>Notas del pedido <span class="optional">(opcional)</span></h2>
+          <textarea formControlName="notes" rows="2"
+                    placeholder="Ej: prefiero retiro en la academia"></textarea>
+        </section>
+
+        @if (errorMessage) {
+          <div class="error-alert">{{ errorMessage }}</div>
+        }
+
+        <button type="submit" class="btn-submit"
+                [disabled]="form.invalid || isSubmitting">
+          @if (isSubmitting) {
+            <span class="btn-spinner"></span>
+            Procesando...
+          } @else {
+            Confirmar pedido · {{ formatPrice(cartService.subtotal()) }}
+          }
+        </button>
+      </form>
+
+      <!-- RESUMEN LATERAL -->
+      <aside class="checkout-summary">
+        <h2>Resumen</h2>
+        <div class="summary-items">
+          @for (item of cartService.cart().items; track item.variantId) {
+            <div class="summary-item">
+              <div class="summary-item-info">
+                <span class="si-name">{{ item.productName }}</span>
+                <span class="si-meta">
+                  @if (item.size !== 'UNICO') { Talla {{ item.size }} · }
+                  x{{ item.quantity }}
+                </span>
+              </div>
+              <span class="si-price">{{ formatPrice(item.subtotal) }}</span>
+            </div>
+          }
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span>{{ formatPrice(cartService.subtotal()) }}</span>
+        </div>
+      </aside>
+    </div>
+  }
+</div>

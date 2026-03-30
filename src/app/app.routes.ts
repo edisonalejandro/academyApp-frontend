@@ -57,27 +57,26 @@ export const routes: Routes = [
     ]
   },
   // Rutas para Admin
-  //{
-  //  path: 'users',
-  //  canActivate: [adminGuard],
-  //  loadChildren: () => import('./features/users/users.routes').then(r => r.usersRoutes)
-  //},
-  //{
-  //  path: 'payments',
-  //  canActivate: [adminGuard],
-  //  loadChildren: () => import('./features/payments/payments.routes').then(r => r.paymentsRoutes)
-  //},
-  //{
-  //  path: 'pricing',
-  //  canActivate: [authGuard], // Todos pueden acceder al calculator, admin a rules
-  //  loadChildren: () => import('./features/pricing/pricing.routes').then(r => r.pricingRoutes)
-  //},
-  //// Rutas para Teacher
-  //{
-  //  path: 'classes',
-  //  canActivate: [teacherGuard],
-  //  loadChildren: () => import('./features/classes/classes.routes').then(r => r.classesRoutes)
-  //},
+  {
+    path: 'catalog',
+    loadChildren: () => import('./features/catalog/catalog.routes').then(r => r.catalogRoutes)
+  },
+  {
+    path: 'payments',
+    canActivate: [adminGuard],
+    loadChildren: () => import('./features/payments/payments.routes').then(r => r.paymentsRoutes)
+  },
+  {
+    path: 'pricing',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/pricing/pricing.routes').then(r => r.pricingRoutes)
+  },
+  // Rutas para Teacher
+  {
+    path: 'classes',
+    canActivate: [teacherGuard],
+    loadChildren: () => import('./features/classes/classes.routes').then(r => r.classesRoutes)
+  },
   //{
   //  path: 'students',
   //  canActivate: [teacherGuard],

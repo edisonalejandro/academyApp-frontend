@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CourseDTO, CreateCourseDTO, UpdateCourseDTO, CourseCapacityResponse, DanceType, DanceLevel } from '../models';
+import { CourseDTO, CreateCourseDTO, UpdateCourseDTO, CourseCapacityResponse, DanceType, DanceLevel, PageResponse } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +12,23 @@ export class CourseService {
   private apiUrl = `${environment.apiUrl}/courses`;
 
   /**
-   * Obtiene todos los cursos activos (público)
+   * Obtiene todos los cursos activos con paginación (público)
    */
-  getCourses(): Observable<CourseDTO[]> {
-    return this.http.get<CourseDTO[]>(this.apiUrl);
+  getCourses(page = 0, size = 20): Observable<PageResponse<CourseDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<PageResponse<CourseDTO>>(this.apiUrl, { params });
   }
 
   /**
-   * Obtiene todos los cursos (incluye inactivos) - requiere ADMIN
+   * Obtiene todos los cursos con paginación (incluye inactivos) - requiere ADMIN
    */
-  getAllCourses(): Observable<CourseDTO[]> {
-    return this.http.get<CourseDTO[]>(`${this.apiUrl}/all`);
+  getAllCourses(page = 0, size = 20): Observable<PageResponse<CourseDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<PageResponse<CourseDTO>>(`${this.apiUrl}/all`, { params });
   }
 
   /**

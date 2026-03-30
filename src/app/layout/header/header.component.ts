@@ -5,6 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class HeaderComponent {
   private router = inject(Router);
   public authService = inject(AuthService);
+  public cartService = inject(CartService);
   
   isMenuOpen = false;
 

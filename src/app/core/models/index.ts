@@ -542,3 +542,173 @@ export interface ApiError {
   message: string;
   path: string;
 }
+
+// Respuesta paginada genérica (Spring Page<T>)
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;       // página actual (0-indexed)
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+// ========================================
+// CATÁLOGO / TIENDA
+// ========================================
+
+export type ProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'UNICO';
+
+export type StoreOrderStatus =
+  | 'PENDING' | 'CONFIRMED' | 'PAID' | 'PREPARING'
+  | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
+
+export type StorePaymentMethod =
+  | 'CASH' | 'CREDIT_CARD' | 'DEBIT_CARD'
+  | 'BANK_TRANSFER' | 'WEBPAY' | 'MERCADOPAGO';
+
+export interface ProductCategoryDTO {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  imageUrl?: string;
+  isActive: boolean;
+  sortOrder: number;
+  productCount?: number;
+  createdAt: string;
+}
+
+export interface ProductVariantDTO {
+  id: number;
+  productId: number;
+  size: ProductSize;
+  color?: string;
+  sku?: string;
+  stock: number;
+  additionalPrice: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ProductDTO {
+  id: number;
+  categoryId: number;
+  categoryName: string;
+  categorySlug: string;
+  name: string;
+  slug: string;
+  description?: string;
+  basePrice: number;
+  imageUrl?: string;
+  isActive: boolean;
+  featured: boolean;
+  variants: ProductVariantDTO[];
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface CartItemDTO {
+  id: number;
+  variantId: number;
+  productId: number;
+  productName: string;
+  productImageUrl?: string;
+  categoryName: string;
+  size: ProductSize;
+  color?: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  availableStock: number;
+  addedAt: string;
+}
+
+export interface CartDTO {
+  id?: number;
+  userId?: number;
+  items: CartItemDTO[];
+  totalItems: number;
+  subtotal: number;
+  updatedAt?: string;
+}
+
+export interface AddToCartRequest {
+  variantId: number;
+  quantity: number;
+}
+
+export interface CheckoutRequest {
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  paymentMethod: StorePaymentMethod;
+  shippingAddress?: string;
+  notes?: string;
+}
+
+export interface StoreOrderItemDTO {
+  id: number;
+  variantId?: number;
+  productName: string;
+  variantSize?: string;
+  variantColor?: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+export interface StoreOrderDTO {
+  id: number;
+  orderNumber: string;
+  userId?: number;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  status: StoreOrderStatus;
+  paymentMethod?: StorePaymentMethod;
+  subtotal: number;
+  discountAmount: number;
+  totalAmount: number;
+  notes?: string;
+  shippingAddress?: string;
+  items: StoreOrderItemDTO[];
+  paidAt?: string;
+  shippedAt?: string;
+  deliveredAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+// ========================================
+// DASHBOARD
+// ========================================
+
+export interface DashboardSummary {
+  // Estudiantes
+  totalStudents: number;
+  activeStudents: number;
+  newStudentsThisMonth: number;
+  // Cursos
+  totalCourses: number;
+  activeCourses: number;
+  // Inscripciones
+  totalEnrollments: number;
+  activeEnrollments: number;
+  // Finanzas
+  monthlyRevenue: number;
+  yearlyRevenue: number;
+  paymentsThisMonth: number;
+  pendingPayments: number;
+  pendingPaymentsCount: number;
+  // Sesiones
+  upcomingSessionsThisWeek: number;
+  completedSessionsThisMonth: number;
+  averageAttendanceRate: number;
+  // Alertas
+  studentsWithLowAttendance: number;
+  // Próximas sesiones
+  upcomingSessions: ClassSessionDTO[];
+}

@@ -54,9 +54,9 @@ export class TeachersComponent implements OnInit {
     this.error.set(null);
     
     this.userService.getAllUsers().subscribe({
-      next: (users) => {
+      next: (page) => {
         // Filtrar solo usuarios con rol TEACHER o ADMIN
-        const teacherUsers = users.filter((u: UserDTO) => 
+        const teacherUsers = page.content.filter((u: UserDTO) => 
           u.roles?.includes('TEACHER') || u.roles?.includes('ROLE_TEACHER') ||
           u.roles?.includes('ADMIN') || u.roles?.includes('ROLE_ADMIN')
         );

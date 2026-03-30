@@ -10,3 +10,4 @@ export * from './student.service';
 export * from './enrollment.service';
 export * from './class-session.service';
 export * from './attendance.service';
+export * from './dashboard.service';

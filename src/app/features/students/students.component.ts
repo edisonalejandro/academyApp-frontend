@@ -54,9 +54,9 @@ export class StudentsComponent implements OnInit {
     this.error.set(null);
     
     this.userService.getAllUsers().subscribe({
-      next: (users) => {
+      next: (page) => {
         // Filtrar solo usuarios con rol STUDENT
-        const studentUsers = users.filter((u: UserDTO) => 
+        const studentUsers = page.content.filter((u: UserDTO) => 
           u.roles?.includes('STUDENT') || u.roles?.includes('ROLE_STUDENT')
         );
         this.students.set(studentUsers);

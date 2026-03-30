@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,46 +6,49 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
-import { JwtResponse } from '../../core/models';
+import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardSummary, JwtResponse } from '../../core/models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-  CommonModule,
-  MatCardModule,
-  MatButtonModule,
-  MatIconModule,
-  MatToolbarModule,
-  MatMenuModule,
-  MatDividerModule
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatDividerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  currentUser: () => JwtResponse | null;
-  
-  stats = {
-    totalUsers: 156,
-    totalClasses: 24,
-    monthlyRevenue: 45000
-  };
+  public authService = inject(AuthService);
+  private dashboardService = inject(DashboardService);
+  private router = inject(Router);
 
-  constructor(
-    public authService: AuthService,
-    private router: Router
-  ) {
+  currentUser: () => JwtResponse | null;
+
+  stats: DashboardSummary | null = null;
+  statsLoading = false;
+  statsError = false;
+
+  constructor() {
     this.currentUser = () => this.authService.currentUser();
   }
 
   ngOnInit(): void {
-    // Cargar estadísticas reales aquí
     if (this.authService.isAdmin()) {
       this.loadAdminStats();
+    } else if (this.authService.isTeacher()) {
+      this.loadQuickStats();
     }
   }
 
@@ -62,13 +65,12 @@ export class DashboardComponent implements OnInit {
   }
 
   viewProfile(): void {
-    // TODO: Implementar vista de perfil
-    console.log('Ver perfil');
+    this.router.navigate(['/profile']);
   }
 
   // Navegación para Admin
   navigateToUsers(): void {
-    this.router.navigate(['/users']);
+    this.router.navigate(['/usuarios']);
   }
 
   navigateToPayments(): void {
@@ -76,7 +78,7 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToPricing(): void {
-    this.router.navigate(['/pricing/rules']);
+    this.router.navigate(['/pricing']);
   }
 
   // Navegación para Teacher
@@ -85,7 +87,7 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToStudents(): void {
-    this.router.navigate(['/students']);
+    this.router.navigate(['/usuarios/alumnos']);
   }
 
   // Navegación para Student
@@ -99,11 +101,36 @@ export class DashboardComponent implements OnInit {
 
   // Navegación común
   navigateToPricingCalculator(): void {
-    this.router.navigate(['/pricing/calculator']);
+    this.router.navigate(['/pricing']);
   }
 
   private loadAdminStats(): void {
-    // TODO: Implementar carga de estadísticas reales desde el backend
-    // Aquí llamarías a los servicios correspondientes
+    this.statsLoading = true;
+    this.statsError = false;
+    this.dashboardService.getSummary().subscribe({
+      next: (data) => {
+        this.stats = data;
+        this.statsLoading = false;
+      },
+      error: () => {
+        this.statsError = true;
+        this.statsLoading = false;
+      }
+    });
+  }
+
+  private loadQuickStats(): void {
+    this.statsLoading = true;
+    this.statsError = false;
+    this.dashboardService.getQuickStats().subscribe({
+      next: (data) => {
+        this.stats = data;
+        this.statsLoading = false;
+      },
+      error: () => {
+        this.statsError = true;
+        this.statsLoading = false;
+      }
+    });
   }
 }

@@ -1,26 +1,25 @@
 <div class="courses-container">
-  <div class="header-section">
-    <h1 class="page-title">
-      <mat-icon>school</mat-icon>
-      Catálogo de Clases
-    </h1>
-    <p class="page-subtitle">Explora nuestras clases de baile disponibles</p>
+
+  <!-- HERO -->
+  <div class="courses-hero">
+    <div class="courses-hero-content">
+      <h1>Catálogo de Clases</h1>
+      <p>Explora nuestras clases de baile disponibles</p>
+    </div>
   </div>
 
   @if (isLoading()) {
     <div class="loading-container">
-      <mat-spinner></mat-spinner>
+      <div class="spinner"></div>
       <p>Cargando clases...</p>
     </div>
   }
 
   @if (error()) {
     <div class="error-container">
-      <mat-icon color="warn">error</mat-icon>
+      <mat-icon>error_outline</mat-icon>
       <p>{{ error() }}</p>
-      <button mat-raised-button color="primary" (click)="loadCourses()">
-        Reintentar
-      </button>
+      <button mat-raised-button (click)="loadCourses()">Reintentar</button>
     </div>
   }
 
@@ -31,128 +30,113 @@
         <h2>No hay clases disponibles</h2>
         <p>No se encontraron clases en este momento.</p>
         @if (authService.isAdmin()) {
-          <button mat-raised-button color="primary" (click)="openCreateCourseDialog()">
-            <mat-icon>add</mat-icon>
-            Crear Primera Clase
+          <button mat-raised-button (click)="openCreateCourseDialog()">
+            <mat-icon>add</mat-icon> Crear Primera Clase
           </button>
         }
       </div>
     } @else {
       <div class="courses-grid">
         @for (course of courses(); track course.id) {
-          <mat-card class="course-card" [class.inactive]="!course.isActive">
-            <!-- Badge de estado inactivo (solo visible para admin) -->
+          <div class="course-card" [class.inactive]="!course.isActive">
+
+            <!-- BADGE INACTIVO (solo admin) -->
             @if (!course.isActive && authService.isAdmin()) {
-              <div class="inactive-badge">
-                <mat-chip color="warn" selected>INACTIVO</mat-chip>
-              </div>
+              <div class="inactive-badge">INACTIVO</div>
             }
 
-            <mat-card-header>
-              <div class="card-header-content">
-                <mat-card-title>{{ course.title }}</mat-card-title>
-                <mat-card-subtitle>{{ course.code }}</mat-card-subtitle>
-              </div>
-              <div class="card-badges">
-                <mat-chip [color]="getDanceLevelColor(course.level)" selected>
+            <!-- BANDA SUPERIOR (equivalente a imagen en catálogo) -->
+            <div class="course-band">
+              <div class="band-icon">{{ getDanceTypeEmoji(course.danceType) }}</div>
+              <div class="band-overlay">
+                <span class="band-type">{{ getDanceTypeLabel(course.danceType) }}</span>
+                <span class="level-pill level-{{ course.level.toLowerCase() }}">
                   {{ getDanceLevelLabel(course.level) }}
-                </mat-chip>
+                </span>
               </div>
-            </mat-card-header>
+            </div>
 
-            <mat-card-content>
-              <div class="course-info">
-                <div class="info-row">
-                  <mat-icon class="info-icon">music_note</mat-icon>
-                  <span class="info-label">Estilo:</span>
-                  <span class="info-value">{{ getDanceTypeLabel(course.danceType) }}</span>
+            <!-- BODY -->
+            <div class="course-body">
+              <span class="course-code">{{ course.code }}</span>
+              <h3 class="course-title">{{ course.title }}</h3>
+
+              @if (course.description) {
+                <p class="course-description">{{ course.description }}</p>
+              }
+
+              <div class="course-details">
+                <div class="detail-row">
+                  <mat-icon class="detail-icon">person</mat-icon>
+                  <span>{{ course.teacherName }}</span>
                 </div>
-
-                <div class="info-row">
-                  <mat-icon class="info-icon">person</mat-icon>
-                  <span class="info-label">Profesor:</span>
-                  <span class="info-value">{{ course.teacherName }}</span>
+                <div class="detail-row">
+                  <mat-icon class="detail-icon">schedule</mat-icon>
+                  <span>{{ formatDuration(course.durationHours) }} por clase</span>
                 </div>
-
-                <div class="info-row">
-                  <mat-icon class="info-icon">schedule</mat-icon>
-                  <span class="info-label">Duración:</span>
-                  <span class="info-value">{{ formatDuration(course.durationHours) }}</span>
-                </div>
-
-                <div class="info-row">
-                  <mat-icon class="info-icon">attach_money</mat-icon>
-                  <span class="info-label">Precio/hora:</span>
-                  <span class="info-value price">{{ formatPrice(course.pricePerHour) }}</span>
-                </div>
-
-                @if (course.description) {
-                  <div class="course-description">
-                    <p>{{ course.description }}</p>
-                  </div>
-                }
-
-                <div class="capacity-info">
-                  <div class="capacity-bar">
-                    <div class="capacity-fill" 
-                         [style.width.%]="(course.activeEnrollments || 0) / course.maxCapacity * 100">
-                    </div>
-                  </div>
-                  <div class="capacity-text">
-                    <span class="enrolled">{{ course.activeEnrollments || 0 }} inscritos</span>
-                    <span class="available">
-                      {{ course.availableSlots || course.maxCapacity }} disponibles
-                    </span>
-                  </div>
+                <div class="detail-row price-row">
+                  <mat-icon class="detail-icon">payments</mat-icon>
+                  <span class="price-value">{{ formatPrice(course.pricePerHour) }}/hora</span>
                 </div>
               </div>
-            </mat-card-content>
 
-            <mat-card-actions>
-              <!-- Botones para usuarios normales -->
+              <!-- BARRA DE CAPACIDAD -->
+              <div class="capacity-section">
+                <div class="capacity-bar">
+                  <div class="capacity-fill"
+                    [style.width.%]="(course.activeEnrollments || 0) / course.maxCapacity * 100"
+                    [class.full]="(course.availableSlots || 0) === 0">
+                  </div>
+                </div>
+                <div class="capacity-text">
+                  <span class="enrolled">{{ course.activeEnrollments || 0 }} inscritos</span>
+                  <span class="available" [class.no-slots]="(course.availableSlots || 0) === 0">
+                    {{ (course.availableSlots || 0) === 0 ? 'Sin cupos' : (course.availableSlots || course.maxCapacity) + ' disponibles' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="course-actions">
               @if (!authService.isAdmin()) {
-                <button mat-raised-button color="primary" 
-                        (click)="openEnrollmentDialog(course)"
-                        [disabled]="!course.isActive || (course.availableSlots || 0) === 0">
+                <button class="btn-enroll"
+                  [disabled]="!course.isActive || (course.availableSlots || 0) === 0"
+                  (click)="openEnrollmentDialog(course)">
                   <mat-icon>add_circle</mat-icon>
                   Inscribirse
                 </button>
-                <button mat-button (click)="openCourseDetails(course)">
-                  <mat-icon>info</mat-icon>
-                  Ver Detalles
+                <button class="btn-details" (click)="openCourseDetails(course)">
+                  <mat-icon>info_outline</mat-icon>
+                  Detalles
                 </button>
               }
-
-              <!-- Botones para administradores -->
               @if (authService.isAdmin()) {
                 <div class="admin-actions">
-                  <button mat-raised-button color="primary" (click)="openEditCourseDialog(course)">
-                    <mat-icon>edit</mat-icon>
-                    Editar
+                  <button class="btn-admin-edit" (click)="openEditCourseDialog(course)">
+                    <mat-icon>edit</mat-icon> Editar
                   </button>
-                  <button mat-raised-button (click)="toggleCourseStatus(course)"
-                          [color]="course.isActive ? 'warn' : 'accent'">
+                  <button class="btn-admin-toggle"
+                    [class.deactivate]="course.isActive"
+                    (click)="toggleCourseStatus(course)">
                     <mat-icon>{{ course.isActive ? 'visibility_off' : 'visibility' }}</mat-icon>
                     {{ course.isActive ? 'Desactivar' : 'Activar' }}
                   </button>
-                  <button mat-icon-button color="warn" (click)="deleteCourse(course)"
-                          matTooltip="Eliminar curso">
+                  <button class="btn-admin-delete" (click)="deleteCourse(course)" title="Eliminar">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
               }
-            </mat-card-actions>
-          </mat-card>
+            </div>
+
+          </div>
         }
       </div>
     }
   }
 
-  <!-- Botón flotante para crear curso (solo admin) -->
   @if (authService.isAdmin() && !isLoading() && !error()) {
-    <button mat-fab class="fab-add-course" color="primary" 
-            (click)="openCreateCourseDialog()"
-            matTooltip="Agregar nueva clase">
+    <button mat-fab class="fab-add-course" (click)="openCreateCourseDialog()" matTooltip="Agregar nueva clase">
       <mat-icon>add</mat-icon>
     </button>
   }

@@ -1,0 +1,99 @@
+<section class="detail-page">
+  @if (loading()) {
+    <div class="loading-state"><div class="spinner"></div><p>Cargando producto...</p></div>
+  } @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/catalog" class="btn-primary">Volver al catálogo</a>
+    </div>
+  } @else {
+    @let p = product()!;
+    <div class="detail-container">
+      <a routerLink="/catalog" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Volver al catálogo
+      </a>
+
+      <div class="detail-layout">
+        <!-- Image -->
+        <div class="product-image-wrap">
+          @if (p.imageUrl) {
+            <img [src]="p.imageUrl" [alt]="p.name" class="product-image" />
+          } @else {
+            <div class="image-placeholder">
+              <svg viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="38" stroke="#c8a97e" stroke-width="2" stroke-dasharray="4 4"/>
+                <text x="40" y="34" text-anchor="middle" fill="#c8a97e" font-size="11" font-weight="700">EDM</text>
+                <text x="40" y="50" text-anchor="middle" fill="#888" font-size="8">Academia</text>
+              </svg>
+            </div>
+          }
+          @if (p.featured) { <span class="featured-pill">Destacado</span> }
+        </div>
+
+        <!-- Info -->
+        <div class="product-info">
+          <span class="category-label">{{ p.categoryName }}</span>
+          <h1 class="product-name">{{ p.name }}</h1>
+          <p class="product-desc">{{ p.description }}</p>
+          <div class="product-price">{{ p.basePrice | currency:'CLP':'symbol-narrow':'1.0-0' }}</div>
+
+          <!-- Variants -->
+          @if (p.variants && p.variants.length > 0) {
+            <div class="variant-section">
+              <label class="section-label">Talla</label>
+              <div class="size-grid">
+                @for (v of p.variants; track v.id) {
+                  <button class="size-btn"
+                    [class.selected]="selectedVariant()?.id === v.id"
+                    [class.out-of-stock]="v.stock === 0"
+                    [disabled]="v.stock === 0"
+                    (click)="selectVariant(v)">
+                    {{ sizeLabel(v.size) }}
+                    @if (v.stock === 0) { <span class="oos-line"></span> }
+                  </button>
+                }
+              </div>
+              @if (selectedVariant(); as sv) {
+                <span class="stock-hint">{{ sv.stock }} disponibles</span>
+              }
+            </div>
+          }
+
+          <!-- Quantity -->
+          @if (selectedVariant()) {
+            <div class="qty-section">
+              <label class="section-label">Cantidad</label>
+              <div class="qty-control">
+                <button class="qty-btn" (click)="decrement()" [disabled]="quantity() <= 1">−</button>
+                <span class="qty-value">{{ quantity() }}</span>
+                <button class="qty-btn" (click)="increment()" [disabled]="quantity() >= (selectedVariant()?.stock ?? 1)">+</button>
+              </div>
+            </div>
+          }
+
+          <!-- Add to Cart -->
+          <button class="btn-add-cart"
+            [class.success]="added()"
+            [disabled]="!selectedVariant() || selectedVariant()!.stock === 0 || adding()"
+            (click)="addToCart()">
+            @if (adding()) {
+              <span class="btn-spinner"></span> Agregando...
+            } @else if (added()) {
+              ✓ ¡Agregado al carrito!
+            } @else {
+              Agregar al carrito
+            }
+          </button>
+
+          <a routerLink="/catalog/cart" class="cart-link">
+            Ver carrito
+            @if (cartService.totalItems() > 0) {
+              <span class="cart-badge">{{ cartService.totalItems() }}</span>
+            }
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</section>

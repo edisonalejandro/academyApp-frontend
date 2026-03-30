@@ -1,0 +1,202 @@
+<div class="catalog-container">
+
+  <!-- HERO -->
+  <div class="catalog-hero">
+    <div class="catalog-hero-content">
+      <h1>Nuestra Tienda</h1>
+      <p>Poleras, polerones y tazas con el diseño oficial de <strong>Estilo D' Mua</strong></p>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="catalog-toolbar">
+    <div class="toolbar-top-row">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="search-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" placeholder="Buscar producto..." (input)="onSearch($any($event.target).value)"/>
+      </div>
+      <div class="cart-link-wrapper">
+        <a routerLink="/catalog/cart" class="cart-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          Ver carrito
+          @if (cartService.totalItems() > 0) {
+            <span class="cart-badge">{{ cartService.totalItems() }}</span>
+          }
+        </a>
+      </div>
+    </div>
+    <div class="category-filters">
+      <button class="filter-btn" [class.active]="selectedCategory() === ''" (click)="filterByCategory('')">
+        Todos
+      </button>
+      @for (cat of categories(); track cat.id) {
+        <button class="filter-btn" [class.active]="selectedCategory() === cat.slug" (click)="filterByCategory(cat.slug)">
+          {{ cat.name }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+  }
+
+  <!-- ERROR -->
+  @if (error()) {
+    <div class="error-container">
+      <p>{{ error() }}</p>
+      <button (click)="loadData()">Reintentar</button>
+    </div>
+  }
+
+  <!-- GRID DE PRODUCTOS -->
+  @if (!isLoading() && !error()) {
+    @if (filteredProducts().length === 0) {
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+        </svg>
+        <h3>No se encontraron productos</h3>
+        <p>Prueba con otro filtro o término de búsqueda.</p>
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of filteredProducts(); track product.id) {
+          <div class="product-card" [class.out-of-stock]="!hasStock(product)">
+
+            <!-- BADGE DESTACADO -->
+            @if (product.featured) {
+              <div class="featured-badge">Destacado</div>
+            }
+
+            <!-- IMAGEN -->
+            <div class="product-image">
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" loading="lazy"/>
+              } @else {
+                <div class="product-placeholder">
+                  <svg viewBox="0 0 100 100" fill="none">
+                    <rect width="100" height="100" rx="8" fill="#1a1a2e"/>
+                    <text x="50" y="40" text-anchor="middle" font-size="22" fill="#c8a97e" font-weight="bold">EDM</text>
+                    <text x="50" y="62" text-anchor="middle" font-size="9" fill="#888">Estilo D' Mua</text>
+                  </svg>
+                </div>
+              }
+              @if (!hasStock(product)) {
+                <div class="stock-overlay">Agotado</div>
+              }
+            </div>
+
+            <!-- INFO -->
+            <div class="product-info">
+              <span class="product-category">{{ product.categoryName }}</span>
+              <h3 class="product-name">{{ product.name }}</h3>
+
+              @if (product.description) {
+                <p class="product-description">{{ product.description }}</p>
+              }
+
+              <!-- SELECTOR DE TALLA -->
+              @if (getSizes(product).length > 0 && getSizes(product)[0] !== 'UNICO') {
+                <div class="size-selector">
+                  <span class="size-label">Talla:</span>
+                  <div class="size-options">
+                    @for (size of getSizes(product); track size) {
+                      @let variant = getVariantBySize(product, size);
+                      @if (variant) {
+                        <button
+                          class="size-btn"
+                          [class.selected]="getVariantForProduct(product.id).variantId === variant.id"
+                          [class.low-stock]="variant.stock <= 3"
+                          (click)="selectVariant(product.id, variant.id)">
+                          {{ size }}
+                        </button>
+                      }
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- STOCK LABEL -->
+              @let stock = getSelectedVariantStock(product);
+              @if (stock > 0 && stock <= 10) {
+                <div class="stock-label low">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="13"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                  Quedan pocas unidades ({{ stock }})
+                </div>
+              } @else if (stock > 10) {
+                <div class="stock-label ok">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="13"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  {{ stock }} en stock
+                </div>
+              }
+
+              <!-- PRECIO + CANTIDAD -->
+              <div class="product-footer">
+                <div class="price-section">
+                  <span class="price">{{ formatPrice(getTotalPrice(product)) }}</span>
+                </div>
+
+                @if (hasStock(product)) {
+                  <div class="qty-cart-row">
+                    <div class="qty-control">
+                      <button (click)="setQuantity(product.id, getVariantForProduct(product.id).quantity - 1)">−</button>
+                      <span>{{ getVariantForProduct(product.id).quantity }}</span>
+                      <button (click)="setQuantity(product.id, getVariantForProduct(product.id).quantity + 1)">+</button>
+                    </div>
+
+                    <button
+                      class="btn-add-cart"
+                      [class.success]="cartSuccess() === product.id"
+                      [disabled]="addingToCart() === product.id"
+                      (click)="addToCart(product)">
+                      @if (cartSuccess() === product.id) {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        ¡Agregado!
+                      } @else if (addingToCart() === product.id) {
+                        <span class="btn-spinner"></span>
+                      } @else {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        Agregar
+                      }
+                    </button>
+                  </div>
+                } @else {
+                  <span class="out-of-stock-label">Sin stock</span>
+                }
+              </div>
+
+              <!-- BOTÓN ADMIN: EDITAR PRODUCTO -->
+              @if (authService.isAdmin()) {
+                <button class="btn-admin-edit-product" (click)="openEditProduct(product)">
+                  ✏️ Editar producto
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
+
+<!-- DIALOG DE EDICIÓN DE PRODUCTO (Admin) -->
+@if (editingProduct()) {
+  <app-edit-product-dialog
+    [product]="editingProduct()!"
+    (saved)="onProductSaved($event)"
+    (closed)="closeEditDialog()">
+  </app-edit-product-dialog>
+}

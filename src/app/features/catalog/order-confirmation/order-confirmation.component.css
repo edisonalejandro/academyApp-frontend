@@ -1,0 +1,117 @@
+:host { display: block; background: #0a0a14; min-height: 100vh; padding: 40px 24px; }
+
+.confirmation-container { max-width: 900px; margin: 0 auto; }
+
+.loading-state, .error-state {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 20px; padding: 80px; color: #888; text-align: center;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(200,169,126,0.2);
+  border-top-color: #c8a97e;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Success Banner */
+.success-banner {
+  display: flex; align-items: center; gap: 20px;
+  background: linear-gradient(135deg, rgba(100,220,150,0.12), rgba(100,220,150,0.05));
+  border: 1px solid rgba(100,220,150,0.25);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+.success-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(100,220,150,0.2);
+  border: 2px solid rgba(100,220,150,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; color: #64dc96; flex-shrink: 0;
+}
+.success-banner h1 { font-size: 1.4rem; font-weight: 800; color: #f0f0f0; margin: 0 0 4px; }
+.success-banner p { color: #aaa; font-size: 0.9rem; margin: 0; }
+
+/* Order Number */
+.order-number-card {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, #12121f, #1a1a2e);
+  border: 1px solid rgba(200,169,126,0.3);
+  border-radius: 14px;
+  padding: 18px 28px;
+  margin-bottom: 28px;
+}
+.label { font-size: 0.9rem; color: #aaa; }
+.number { font-size: 1.3rem; font-weight: 800; color: #c8a97e; letter-spacing: 0.04em; }
+
+/* Layout */
+.confirmation-layout {
+  display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;
+}
+
+.order-details, .order-info {
+  background: linear-gradient(135deg, #12121f, #1a1a2e);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 24px;
+}
+h2 { font-size: 1rem; font-weight: 700; color: #f0f0f0; margin: 0 0 16px; }
+
+/* Items */
+.items-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.order-item {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.order-item:last-child { border-bottom: none; }
+.item-info { display: flex; flex-direction: column; gap: 4px; }
+.item-name { font-size: 0.95rem; color: #e0e0e0; font-weight: 600; }
+.item-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-size: 0.75rem; color: #aaa;
+  background: rgba(255,255,255,0.07);
+  border-radius: 6px; padding: 2px 8px;
+}
+.qty { font-size: 0.82rem; color: #777; }
+.item-price { font-size: 0.9rem; color: #c8a97e; font-weight: 700; white-space: nowrap; }
+
+/* Totals */
+.order-totals { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 16px; }
+.total-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: #aaa; margin-bottom: 8px; }
+.total-row.grand { font-size: 1.1rem; font-weight: 700; color: #f0f0f0; }
+.total-row.grand span:last-child { color: #c8a97e; }
+
+/* Info */
+.info-grid { display: flex; flex-direction: column; gap: 12px; }
+.info-row { display: flex; flex-direction: column; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+.info-label { font-size: 0.78rem; color: #666; text-transform: uppercase; letter-spacing: 0.06em; }
+.info-value { font-size: 0.9rem; color: #d0d0d0; }
+.status-badge {
+  display: inline-block; padding: 3px 12px;
+  background: rgba(200,169,126,0.15);
+  border: 1px solid rgba(200,169,126,0.3);
+  border-radius: 20px;
+  font-size: 0.78rem; color: #c8a97e; font-weight: 600;
+  width: fit-content;
+}
+
+.confirmation-actions {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;
+}
+.btn-primary {
+  padding: 12px 24px; background: linear-gradient(135deg, #c8a97e, #d4b896);
+  border-radius: 12px; color: #0d0d1a; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+}
+.btn-secondary {
+  padding: 12px 24px; background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; color: #ccc; font-weight: 600; text-decoration: none; font-size: 0.9rem;
+}
+.btn-primary:hover { box-shadow: 0 6px 20px rgba(200,169,126,0.35); }
+
+@media (max-width: 768px) {
+  .confirmation-layout { grid-template-columns: 1fr; }
+  .success-banner { flex-direction: column; text-align: center; }
+}

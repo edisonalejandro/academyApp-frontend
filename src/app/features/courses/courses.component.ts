@@ -60,8 +60,8 @@ export class CoursesComponent implements OnInit {
       : this.courseService.getCourses();
     
     observable.subscribe({
-      next: (courses) => {
-        this.courses.set(courses);
+      next: (page) => {
+        this.courses.set(page.content);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -223,6 +223,15 @@ export class CoursesComponent implements OnInit {
         this.loadCourses(); // Recargar para actualizar cupos disponibles
       }
     });
+  }
+
+  getDanceTypeEmoji(danceType: DanceType): string {
+    const emojis: Record<DanceType, string> = {
+      SALSA: '💃', BACHATA: '🎵', MERENGUE: '🎶', REGGAETON: '🎤',
+      CUMBIA: '🪘', TANGO: '🕺', KIZOMBA: '🌙', ZOUK: '🌊',
+      MAMBO: '🥁', CHA_CHA_CHA: '⭐'
+    };
+    return emojis[danceType] || '🎵';
   }
 
   getDanceTypeLabel(danceType: DanceType): string {

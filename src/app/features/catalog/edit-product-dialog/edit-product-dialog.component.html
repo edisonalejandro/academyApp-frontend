@@ -1,0 +1,148 @@
+<div class="dialog-overlay" (click)="close()">
+  <div class="dialog-panel" (click)="$event.stopPropagation()">
+
+    <!-- HEADER -->
+    <div class="dialog-header">
+      <div class="dialog-title">
+        <span class="title-icon">✏️</span>
+        <h2>Editar Producto</h2>
+      </div>
+      <button class="btn-close" (click)="close()" title="Cerrar">✕</button>
+    </div>
+
+    <!-- ERROR -->
+    @if (errorMsg()) {
+      <div class="error-banner">⚠ {{ errorMsg() }}</div>
+    }
+
+    <div class="dialog-body">
+
+      <!-- COLUMNA IMAGEN -->
+      <div class="image-section">
+        <div class="image-preview">
+          @if (imagePreview()) {
+            <img [src]="imagePreview()!" alt="Vista previa" />
+          } @else {
+            <div class="image-placeholder">
+              <span>📷</span>
+              <p>Sin imagen</p>
+            </div>
+          }
+        </div>
+
+        <label class="btn-upload">
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+          <span>📁 Cambiar imagen</span>
+        </label>
+
+        <p class="upload-hint">JPG, PNG o WEBP — máx 5 MB</p>
+
+        @if (uploadingImage()) {
+          <div class="upload-progress">Subiendo imagen...</div>
+        }
+      </div>
+
+      <!-- COLUMNA DETALLES -->
+      <div class="details-section">
+
+        <!-- Nombre -->
+        <div class="field-group">
+          <label class="field-label">Nombre del producto *</label>
+          <input class="field-input" type="text" [(ngModel)]="name" placeholder="Ej: Playera Academia Baile" />
+        </div>
+
+        <!-- Descripción -->
+        <div class="field-group">
+          <label class="field-label">Descripción</label>
+          <textarea class="field-input" rows="3" [(ngModel)]="description"
+            placeholder="Describe el producto..."></textarea>
+        </div>
+
+        <!-- Precio + Categoría en fila -->
+        <div class="field-row">
+          <div class="field-group flex1">
+            <label class="field-label">Precio base (CLP) *</label>
+            <input class="field-input" type="number" [(ngModel)]="basePrice" min="1" step="100" />
+          </div>
+          <div class="field-group flex1">
+            <label class="field-label">Categoría</label>
+            <select class="field-input" [(ngModel)]="categoryId">
+              @for (cat of categories(); track cat.id) {
+                <option [ngValue]="cat.id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Destacado -->
+        <div class="field-check">
+          <input type="checkbox" id="featured" [(ngModel)]="featured" />
+          <label for="featured">Producto destacado</label>
+        </div>
+
+        <!-- VARIANTES / TALLAS -->
+        <div class="variants-section">
+          <div class="variants-header">
+            <h3>Tallas y Stock</h3>
+            <button class="btn-add-variant" (click)="addVariant()">+ Agregar talla</button>
+          </div>
+
+          @if (visibleVariants().length === 0) {
+            <p class="variants-empty">Sin variantes configuradas</p>
+          } @else {
+            <div class="variants-table">
+              <div class="vt-head">
+                <span>Talla</span>
+                <span>Stock</span>
+                <span>Precio adicional</span>
+                <span></span>
+              </div>
+
+              @for (row of visibleVariants(); track $index; let i = $index) {
+                <div class="vt-row" [class.to-delete]="row.toDelete">
+                  <!-- Talla -->
+                  <select class="vt-select" [(ngModel)]="row.size" [disabled]="row.toDelete">
+                    @for (s of availableSizesFor(row.size); track s) {
+                      <option [value]="s">{{ formatSizeLabel(s) }}</option>
+                    }
+                    <option [value]="row.size">{{ formatSizeLabel(row.size) }}</option>
+                  </select>
+
+                  <!-- Stock -->
+                  <input class="vt-input" type="number" min="0"
+                    [(ngModel)]="row.stock" [disabled]="row.toDelete" />
+
+                  <!-- Precio adicional -->
+                  <input class="vt-input" type="number" min="0" step="100"
+                    [(ngModel)]="row.additionalPrice" [disabled]="row.toDelete"
+                    placeholder="0" />
+
+                  <!-- Botón eliminar / deshacer -->
+                  @if (!row.toDelete) {
+                    <button class="btn-delete-row" (click)="markDelete(i)" title="Eliminar talla">🗑</button>
+                  } @else {
+                    <button class="btn-undo-row" (click)="undoDelete(i)" title="Deshacer">↩</button>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="close()">Cancelar</button>
+      <button class="btn-save" (click)="save()" [disabled]="saving()">
+        @if (saving()) {
+          <span class="spinner-inline"></span> Guardando...
+        } @else {
+          💾 Guardar cambios
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

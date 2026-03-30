@@ -1,0 +1,109 @@
+<section class="confirmation-page">
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando tu orden...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/catalog" class="btn-primary">Volver al catálogo</a>
+    </div>
+  } @else {
+    @let o = order()!;
+    <div class="confirmation-container">
+      <!-- Success Banner -->
+      <div class="success-banner">
+        <div class="success-icon">✓</div>
+        <div>
+          <h1>¡Pedido realizado con éxito!</h1>
+          <p>Te enviaremos un correo de confirmación a {{ o.customerEmail }}</p>
+        </div>
+      </div>
+
+      <!-- Order Number -->
+      <div class="order-number-card">
+        <span class="label">Número de orden</span>
+        <span class="number">{{ o.orderNumber }}</span>
+      </div>
+
+      <div class="confirmation-layout">
+        <!-- Order Items -->
+        <div class="order-details">
+          <h2>Productos</h2>
+          <div class="items-list">
+            @for (item of o.items; track item.id) {
+              <div class="order-item">
+                <div class="item-info">
+                  <span class="item-name">{{ item.productName }}</span>
+                  <div class="item-meta">
+                    @if (item.variantSize && item.variantSize !== 'UNICO') {
+                      <span class="tag">{{ item.variantSize }}</span>
+                    }
+                    @if (item.variantColor) {
+                      <span class="tag">{{ item.variantColor }}</span>
+                    }
+                    <span class="qty">x{{ item.quantity }}</span>
+                  </div>
+                </div>
+                <span class="item-price">{{ item.unitPrice * item.quantity | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            }
+          </div>
+
+          <!-- Totals -->
+          <div class="order-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span>{{ o.totalAmount | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+            <div class="total-row grand">
+              <span>Total</span>
+              <span>{{ o.totalAmount | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Info -->
+        <div class="order-info">
+          <h2>Información del pedido</h2>
+          <div class="info-grid">
+            <div class="info-row">
+              <span class="info-label">Cliente</span>
+              <span class="info-value">{{ o.customerName }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ o.customerEmail }}</span>
+            </div>
+            @if (o.customerPhone) {
+              <div class="info-row">
+                <span class="info-label">Teléfono</span>
+                <span class="info-value">{{ o.customerPhone }}</span>
+              </div>
+            }
+            <div class="info-row">
+              <span class="info-label">Pago</span>
+              <span class="info-value">{{ paymentLabel(o.paymentMethod ?? '') }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Estado</span>
+              <span class="status-badge">{{ o.status }}</span>
+            </div>
+            @if (o.shippingAddress) {
+              <div class="info-row">
+                <span class="info-label">Dirección</span>
+                <span class="info-value">{{ o.shippingAddress }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="confirmation-actions">
+            <a routerLink="/catalog" class="btn-primary">Seguir comprando</a>
+            <a routerLink="/" class="btn-secondary">Ir al inicio</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

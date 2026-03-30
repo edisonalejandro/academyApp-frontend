@@ -1,5 +1,78 @@
 <div class="home-container">
-	<!-- Hero Banner -->
+
+	<!-- ===== VIDEO HERO — scroll-shrink effect ===== -->
+	<section class="video-scroll-space">
+		<div class="video-sticky">
+
+			<!-- Fondo del hero que se difumina mientras el video se achica -->
+			<div class="hero-crossfade" [style.opacity]="heroBannerOpacity">
+				<div class="hero-crossfade-overlay"></div>
+				<div class="hero-crossfade-content">
+					<h1 class="hero-title">Estilo D' Mua</h1>
+					<p class="hero-subtitle">
+						Aprende salsa y bachata en una academia pensada para crecer, disfrutar y conectar.
+					</p>
+					<div class="hero-actions">
+						<button class="btn-primary" routerLink="/dashboard">Ver clases</button>
+						<button class="btn-secondary" routerLink="/auth/register">Reservar clase</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Video frame que se achica con el scroll -->
+			<div
+				class="video-frame"
+				[style.transform]="'scale(' + videoScale + ')'"
+				[style.border-radius]="videoBorderRadius + 'px'"
+				[style.opacity]="videoOpacity"
+			>
+				<video
+					#heroVideo
+					class="hero-video"
+					autoplay
+					muted
+					loop
+					playsinline
+				>
+					<source src="assets/videos/video-clase-Adrian2.mov" type="video/mp4">
+				</video>
+
+				<!-- Overlay oscuro suave -->
+				<div class="video-overlay"></div>
+
+				<!-- Texto sobre el video -->
+				<div class="video-hero-text">
+					<h1 class="video-hero-title">Estilo D' Mua</h1>
+					<p class="video-hero-subtitle">Aprende salsa y bachata. Vívelo.</p>
+				</div>
+
+				<!-- Botón play/pause -->
+				<button class="video-control-btn" (click)="togglePlay()" [attr.aria-label]="isPaused ? 'Reproducir' : 'Pausar'">
+					@if (isPaused) {
+						<svg viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z"/>
+						</svg>
+					} @else {
+						<svg viewBox="0 0 24 24" fill="currentColor">
+							<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+						</svg>
+					}
+				</button>
+			</div>
+
+			<!-- Indicador de scroll -->
+			<div class="scroll-indicator" [style.opacity]="scrollIndicatorOpacity">
+				<span>Scroll</span>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+				</svg>
+			</div>
+
+		</div>
+	</section>
+	<!-- ===== FIN VIDEO HERO ===== -->
+
+	<!-- Hero Banner (imagen estática — visible al salir del área sticky) -->
 	<section class="hero-banner">
 		<div class="hero-overlay"></div>
 		<div class="hero-content">

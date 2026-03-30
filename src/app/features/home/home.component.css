@@ -11,6 +11,7 @@
   --spacing-md: 2rem;
   --radius-lg: 16px;
   --radius-full: 9999px;
+  --header-height: 80px;
 }
 
 .home-container {
@@ -19,14 +20,191 @@
 }
 
 /* ========================================
-   HERO SECTION
+   VIDEO HERO — SCROLL SHRINK
+   ======================================== */
+
+/* Crea el espacio de scroll necesario para la animación */
+.video-scroll-space {
+  height: calc(100vh + 650px);
+  position: relative;
+  background: #000;
+}
+
+/* Se queda fijo mientras el usuario hace scroll por el espacio de animación */
+.video-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Fondo del hero que aparece difuminado mientras el video se achica */
+.hero-crossfade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
+    url('/Banner1.png') center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero-crossfade-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.55) 100%);
+  pointer-events: none;
+}
+
+.hero-crossfade-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  padding: 3rem 2.5rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: auto;
+}
+
+/* Contenedor del video — recibe el scale y border-radius via JS */
+.video-frame {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transform-origin: center center;
+  will-change: transform, border-radius;
+  z-index: 2; /* por encima del hero-crossfade */
+  /* Sin transition CSS: el JS maneja la animación frame a frame con scroll */
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay oscuro sobre el video */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.05) 40%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+}
+
+/* Texto superpuesto sobre el video */
+.video-hero-text {
+  position: absolute;
+  bottom: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.video-hero-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  color: #FFD700;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.video-hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Botón play/pause — esquina inferior derecha del video */
+.video-control-btn {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.video-control-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.1);
+}
+
+.video-control-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Indicador scroll — desaparece al hacer scroll */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 5;
+  animation: scrollBounce 1.6s ease-in-out infinite;
+}
+
+.scroll-indicator svg {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}
+
+/* ========================================
+   HERO SECTION (estático, debajo del video)
    ======================================== */
 .hero-banner {
+  display: none;
   position: relative;
   height: 85vh;
   min-height: 600px;
   max-height: 900px;
-  display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;

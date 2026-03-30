@@ -79,10 +79,10 @@ export class CourseDetailsComponent {
   }
 
   formatPrice(price: number): string {
-    return new Intl.NumberFormat('es-UY', {
+    return new Intl.NumberFormat('es-CL', {
       style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
+      currency: 'CLP',
+      minimumFractionDigits: 0
     }).format(price);
   }
 }

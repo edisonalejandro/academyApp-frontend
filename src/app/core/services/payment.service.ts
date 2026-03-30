@@ -93,4 +93,11 @@ export class PaymentService {
   getMyPayments(): Observable<PaymentResponseDTO[]> {
     return this.http.get<PaymentResponseDTO[]>(`${this.baseUrl}/my-payments`);
   }
+
+  /**
+   * GET /api/payments - Todos los pagos (ADMIN)
+   */
+  getAllPayments(): Observable<PaymentResponseDTO[]> {
+    return this.http.get<PaymentResponseDTO[]>(this.baseUrl);
+  }
 }

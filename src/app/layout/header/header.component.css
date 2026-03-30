@@ -138,6 +138,35 @@
   background: var(--color-primary);
 }
 
+.nav-catalog { position: relative; padding-right: 10px; }
+
+.nav-cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background: #c8a97e;
+  color: #0d0d1a;
+  font-size: 0.62rem;
+  font-weight: 800;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+
+.mobile-cart-badge {
+  background: #c8a97e;
+  color: #0d0d1a;
+  font-size: 0.65rem;
+  font-weight: 800;
+  min-width: 18px; height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: auto;
+}
+
 /* Botones de acción */
 .action-buttons {
   display: flex;
