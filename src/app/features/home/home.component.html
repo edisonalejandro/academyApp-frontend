@@ -4,6 +4,11 @@
 	<section class="video-scroll-space">
 		<div class="video-sticky">
 
+			<!-- Fondo (Banner1.png) que aparece difuminado mientras el video se achica -->
+			<div class="hero-crossfade" [style.opacity]="heroBannerOpacity">
+				<div class="hero-crossfade-overlay"></div>
+			</div>
+
 			<!-- Video frame que se achica con el scroll -->
 			<div
 				class="video-frame"
