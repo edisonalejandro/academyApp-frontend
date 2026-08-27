@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
       lastName: 'Maturana',
       photoUrl: 'assets/images/profesor_AdrianMaturana.png',
       cardPhotoUrl: 'assets/images/profesor_AdrianMaturana.png',
-      bio: 'Profesor formado en base a la experiencia de todos los años bailando, encontrando distintas formas de enseñar mediante la capacitación en clases de distintos excelentes profesores y profesoras que ayudaron a encontrar el propio Estilo D´ MuA'
+      bio: 'Adrián lleva toda una vida bailando, y ese camino —sumado a lo aprendido junto a grandes profesores y profesoras— dio forma a su propio sello: el Estilo D\' MuA. Hoy pone esa experiencia al servicio de cada alumno, con clases cercanas, pacientes y pensadas para que todos, sin importar el nivel, disfruten aprender a bailar.'
     }
   ];
   teachersLoading = false;
