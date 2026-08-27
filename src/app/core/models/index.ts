@@ -24,7 +24,14 @@ export enum PaymentMethod {
   CREDIT_CARD = 'CREDIT_CARD',
   DEBIT_CARD = 'DEBIT_CARD',
   BANK_TRANSFER = 'BANK_TRANSFER',
-  MOBILE_PAYMENT = 'MOBILE_PAYMENT'
+  MOBILE_PAYMENT = 'MOBILE_PAYMENT',
+  WEBPAY = 'WEBPAY'
+}
+
+export interface WebpayInitResponseDTO {
+  url: string;
+  token: string;
+  paymentCode: string;
 }
 
 export enum PaymentStatus {
@@ -104,6 +111,7 @@ export interface RegisterRequest {
 export interface JwtResponse {
   token: string;
   type: string;
+  refreshToken?: string;
   id: number;
   email: string;
   firstName: string;
@@ -126,6 +134,7 @@ export interface UserDTO {
   email: string;
   password?: string; // write-only
   phone?: string;
+  profilePhotoUrl?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -347,6 +356,7 @@ export interface StudentDTO {
   notes?: string;
   userId?: number;
   userEmail?: string;
+  profilePhotoUrl?: string;
   fullName?: string;
   createdAt: string;
   updatedAt: string;
@@ -354,6 +364,33 @@ export interface StudentDTO {
 
 export interface StudentCategoryUpdateRequest {
   category: StudentCategory;
+}
+
+// ========================================
+// PROFESORES
+// ========================================
+
+export interface TeacherProfileDTO {
+  id: number;
+  userId?: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  photoUrl?: string;
+  cardPhotoUrl?: string;
+  bio?: string;
+  specialties?: string;
+  yearsOfExperience?: number;
+  titles?: string;
+  achievements?: string;
+  instagram?: string;
+  facebook?: string;
+  youtube?: string;
+  tiktok?: string;
+  website?: string;
+  isPublic?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // ========================================
@@ -397,6 +434,14 @@ export interface EnrollmentSummaryResponse {
 
 export interface EnrollmentCancelRequest {
   reason?: string;
+}
+
+export interface AdminEnrollmentRequest {
+  studentId: number;
+  courseId: number;
+  purchasedHours: number;
+  totalPaid: number;
+  notes?: string;
 }
 
 // ========================================
