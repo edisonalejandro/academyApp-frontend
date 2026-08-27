@@ -1725,5 +1725,5 @@
 @media (max-width: 768px) {
   .teachers-subsection { padding: 40px 20px; }
   .teachers-title { font-size: 1.7rem; }
-  .teachers-grid { grid-template-columns: repeat(auto-fit, 160px); gap: 16px; }
+  .teachers-grid { grid-template-columns: minmax(0, 420px); gap: 16px; }
 }
