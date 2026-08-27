@@ -25,6 +25,7 @@
 }
 
 .header-container {
+  position: relative;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
@@ -71,8 +72,8 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
-  -webkit-mask-image: radial-gradient(ellipse 60% 60% at center, black 38%, transparent 96%);
-  mask-image: radial-gradient(ellipse 60% 60% at center, black 38%, transparent 96%);
+  -webkit-mask-image: radial-gradient(ellipse closest-side at center, black 52%, transparent 100%);
+  mask-image: radial-gradient(ellipse closest-side at center, black 52%, transparent 100%);
 }
 
 .logo-video {
@@ -91,13 +92,16 @@
   opacity: 1;
 }
 
-/* Navegación Desktop */
+/* Navegación Desktop — centrada respecto al header completo, independiente
+   del ancho del logo o de los botones de acción a los costados */
 .nav-desktop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 1;
-  justify-content: center;
 }
 
 .nav-link {
