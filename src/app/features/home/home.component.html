@@ -8,7 +8,7 @@
 			<div class="hero-crossfade" [style.opacity]="heroBannerOpacity">
 				<div class="hero-crossfade-overlay"></div>
 				<div class="hero-crossfade-content">
-					<h1 class="hero-title">Estilo D' Mua</h1>
+					<h1 class="hero-title">Estilo D' MuA</h1>
 					<p class="hero-subtitle">
 						Aprende salsa y bachata en una academia pensada para crecer, disfrutar y conectar.
 					</p>
@@ -34,7 +34,7 @@
 					loop
 					playsinline
 				>
-					<source src="assets/videos/video-clase-Adrian2.mov" type="video/mp4">
+					<source src="assets/videos/video-clase-Adrian2.mp4" type="video/mp4">
 				</video>
 
 				<!-- Overlay oscuro suave -->
@@ -42,22 +42,51 @@
 
 				<!-- Texto sobre el video -->
 				<div class="video-hero-text">
-					<h1 class="video-hero-title">Estilo D' Mua</h1>
+					<h1 class="video-hero-title">Estilo D' MuA</h1>
 					<p class="video-hero-subtitle">Aprende salsa y bachata. Vívelo.</p>
 				</div>
 
-				<!-- Botón play/pause -->
-				<button class="video-control-btn" (click)="togglePlay()" [attr.aria-label]="isPaused ? 'Reproducir' : 'Pausar'">
-					@if (isPaused) {
-						<svg viewBox="0 0 24 24" fill="currentColor">
-							<path d="M8 5v14l11-7z"/>
-						</svg>
-					} @else {
-						<svg viewBox="0 0 24 24" fill="currentColor">
-							<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-						</svg>
-					}
-				</button>
+				<!-- Controles del video -->
+				<div class="video-controls">
+					<button class="video-control-btn" (click)="togglePlay()" [attr.aria-label]="isPaused ? 'Reproducir' : 'Pausar'">
+						@if (isPaused) {
+							<svg viewBox="0 0 24 24" fill="currentColor">
+								<path d="M8 5v14l11-7z"/>
+							</svg>
+						} @else {
+							<svg viewBox="0 0 24 24" fill="currentColor">
+								<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+							</svg>
+						}
+					</button>
+					<div class="volume-control-group">
+						<button class="video-control-btn" (click)="toggleMute()" [attr.aria-label]="isMuted ? 'Activar audio' : 'Silenciar'">
+							@if (isMuted) {
+								<!-- Muted icon -->
+								<svg viewBox="0 0 24 24" fill="currentColor">
+									<path d="M16.5 12A4.5 4.5 0 0 0 14 7.97V10.18l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.98 1.98L21 18.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+								</svg>
+							} @else {
+								<!-- Unmuted icon -->
+								<svg viewBox="0 0 24 24" fill="currentColor">
+									<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+								</svg>
+							}
+						</button>
+						@if (!isMuted) {
+							<input
+								type="range"
+								class="volume-slider"
+								min="0"
+								max="100"
+								step="5"
+								[value]="volumePercent"
+								(input)="onVolumeChange($event)"
+								aria-label="Volumen"
+							>
+						}
+					</div>
+				</div>
 			</div>
 
 			<!-- Indicador de scroll -->
@@ -76,7 +105,7 @@
 	<section class="hero-banner">
 		<div class="hero-overlay"></div>
 		<div class="hero-content">
-			<h1 class="hero-title">Estilo D' Mua</h1>
+			<h1 class="hero-title">Estilo D' MuA</h1>
 			<p class="hero-subtitle">
 				Aprende salsa y bachata en una academia pensada para crecer, disfrutar y conectar.
 			</p>
@@ -107,168 +136,379 @@
 		</div>
 
 		<div class="disciplines-grid">
-			<!-- Ballet Clásico -->
+			<!-- Salsa Cubana -->
 			<article class="discipline-card">
-				<div class="discipline-image" style="background-image: url('/assets/images/ballet.jpg')">
+				<div class="discipline-image" style="background-image: url('/assets/images/clase_salsa.png')">
 					<div class="discipline-overlay"></div>
 				</div>
 				<div class="discipline-content">
-					<h3 class="discipline-name">Ballet Clásico</h3>
+					<h3 class="discipline-name">Salsa Cubana</h3>
 					<button class="btn-explore">EXPLORAR</button>
 				</div>
 			</article>
 
-			<!-- Hip Hop Urbano -->
-			<article class="discipline-card">
-				<div class="discipline-image" style="background-image: url('/assets/images/hiphop.jpg')">
-					<div class="discipline-overlay"></div>
-				</div>
-				<div class="discipline-content">
-					<h3 class="discipline-name">Hip Hop Urbano</h3>
-					<button class="btn-explore">EXPLORAR</button>
-				</div>
-			</article>
-
-			<!-- Salsa & Bachata -->
+			<!-- Bachata -->
 			<article class="discipline-card">
 				<div class="discipline-image" style="background-image: url('/assets/images/salsa.jpg')">
 					<div class="discipline-overlay"></div>
 				</div>
 				<div class="discipline-content">
-					<h3 class="discipline-name">Salsa & Bachata</h3>
+					<h3 class="discipline-name">Bachata</h3>
 					<button class="btn-explore">EXPLORAR</button>
 				</div>
 			</article>
 		</div>
 	</section>
 
-	<!-- Access Section -->
-	<section class="access-section">
-		<div class="section-header">
-			<h2 class="section-title">Accede a tu espacio</h2>
-			<p class="section-subtitle">
-				Ingresa según tu perfil para gestionar clases, alumnos y administración de la academia.
-			</p>
+	<!-- ===== SECCIÓN NOSOTROS ===== -->
+	<section id="nosotros" class="about-section">
+		<div class="about-inner">
+			<div class="about-text">
+				<span class="about-tag">Nuestra historia</span>
+				<h2 class="about-title">Bailamos porque <em>vivimos</em></h2>
+				<p class="about-body">
+					Estilo D' MuA nació de la pasión del profesor y bailarín Adrian Maturana, que creyó que el baile puede cambiar vidas.
+					Hoy somos una academia donde la alegría, la disciplina y la comunidad se encuentran en cada clase.
+				</p>
+				<p class="about-body">
+					Desde principiantes hasta avanzados, nuestro método progresivo garantiza que cada alumno
+					descubra su propio estilo mientras disfruta del proceso.
+				</p>
+				<ul class="about-features">
+					<li>
+						<span class="about-icon">🏆</span>
+						Más de 3 años formando bailarines
+					</li>
+					<li>
+						<span class="about-icon">👥</span>
+						+20 alumnos activos en la comunidad
+					</li>
+					<li>
+						<span class="about-icon">🎵</span>
+						Salsa, bachata y pronto mucho más
+					</li>
+					<li>
+						<span class="about-icon">📍</span>
+						Clases presenciales y online disponibles próximamente
+					</li>
+				</ul>
+			</div>
+			<div class="about-cards">
+				<div class="about-stat-card">
+					<span class="about-stat-num">20+</span>
+					<span class="about-stat-label">Alumnos activos</span>
+				</div>
+				<div class="about-stat-card">
+					<span class="about-stat-num">3+</span>
+					<span class="about-stat-label">Años de experiencia</span>
+				</div>
+				<div class="about-stat-card">
+					<span class="about-stat-num">1</span>
+					<span class="about-stat-label">Profesor certificado</span>
+				</div>
+				<div class="about-stat-card">
+					<span class="about-stat-num">98%</span>
+					<span class="about-stat-label">Alumnos satisfechos</span>
+				</div>
+			</div>
 		</div>
 
-		<div class="cards-grid">
-			<!-- Alumno Card -->
-			<article class="access-card">
-				<div class="card-icon">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-					</svg>
+		<!-- Profesores -->
+		@if (teachersLoading) {
+			<div class="teachers-loading">
+				<span class="teachers-loading-dot"></span>
+				<span class="teachers-loading-dot"></span>
+				<span class="teachers-loading-dot"></span>
+			</div>
+		} @else if (teachers.length > 0) {
+			<div class="teachers-subsection">
+				<span class="about-tag">Conoce a tu equipo</span>
+				<h3 class="teachers-title">Nuestros <em>Profesores</em></h3>
+				<div class="teachers-grid">
+					@for (t of teachers; track t.id) {
+						<div class="teacher-card">
+							<div class="teacher-card-photo-wrapper">
+								@if (t.cardPhotoUrl || t.photoUrl) {
+									<img [src]="t.cardPhotoUrl || t.photoUrl" [alt]="t.firstName + ' ' + t.lastName" class="teacher-card-photo">
+								} @else {
+									<div class="teacher-card-initials">
+										{{ (t.firstName?.[0] ?? '') + (t.lastName?.[0] ?? '') }}
+									</div>
+								}
+							</div>
+							<div class="teacher-card-body">
+								<h4 class="teacher-card-name">{{ t.firstName }} {{ t.lastName }}</h4>
+								@if (t.specialties) {
+									<p class="teacher-card-specialties">{{ t.specialties }}</p>
+								}
+								@if (t.yearsOfExperience) {
+									<p class="teacher-card-years">{{ t.yearsOfExperience }} años de experiencia</p>
+								}
+								@if (t.bio) {
+									<p class="teacher-card-bio">{{ t.bio }}</p>
+								}
+							</div>
+						</div>
+					}
 				</div>
-				<h3 class="card-title">Alumno</h3>
-				<p class="card-description">
-					Reserva clases, revisa horarios y sigue tu progreso.
-				</p>
-				<ul class="card-features">
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Próximas clases
-					</li>
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Estado de pagos
-					</li>
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Historial de asistencia
-					</li>
-				</ul>
-				<button class="card-button" routerLink="/auth/login">
-					Entrar como alumno
-					<svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-					</svg>
-				</button>
-			</article>
+			</div>
+		}
+	</section>
 
-			<!-- Profesor Card -->
-			<article class="access-card featured">
-				<div class="card-badge">Más usado</div>
-				<div class="card-icon">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-					</svg>
-				</div>
-				<h3 class="card-title">Profesor</h3>
-				<p class="card-description">
-					Administra tus clases y visualiza tus estudiantes.
-				</p>
-				<ul class="card-features">
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Lista de alumnos
-					</li>
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Horarios asignados
-					</li>
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Seguimiento de asistencia
-					</li>
-				</ul>
-				<button class="card-button" routerLink="/auth/login">
-					Entrar como profesor
-					<svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-					</svg>
-				</button>
-			</article>
+	<!-- ===== SECCIÓN REDES SOCIALES ===== -->
+	<section id="redes" class="social-section">
+		<div class="social-inner">
+			<div class="social-header">
+				<span class="social-tag">Síguenos</span>
+				<h2 class="social-title">Vive el <em>ritmo</em> con nosotros</h2>
+				<p class="social-subtitle">Fotos y videos reales de nuestras clases y eventos, directo desde nuestras redes.</p>
+			</div>
 
-			<!-- Administrador Card -->
-			<article class="access-card">
-				<div class="card-icon">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-					</svg>
+			<!-- Instagram -->
+			<div class="social-platform">
+				<div class="social-platform-header">
+					<h3 class="social-platform-title">
+						<span class="social-platform-icon">📷</span>
+						Instagram
+					</h3>
+					<a class="social-platform-link" href="https://www.instagram.com/estilodmua/" target="_blank" rel="noopener">
+						&#64;estilodmua ↗
+					</a>
 				</div>
-				<h3 class="card-title">Administrador</h3>
-				<p class="card-description">
-					Control total sobre usuarios, pagos y operaciones.
-				</p>
-				<ul class="card-features">
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Gestión de usuarios
-					</li>
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Clases y precios
-					</li>
-					<li>
-						<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-						Reportes
-					</li>
-				</ul>
-				<button class="card-button" routerLink="/auth/login">
-					Entrar al panel
-					<svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-					</svg>
-				</button>
-			</article>
+				<div class="social-grid">
+					@for (post of instagramPosts; track post.url) {
+						<a class="ig-post-card" [href]="post.url" target="_blank" rel="noopener">
+							<img [src]="post.image" [alt]="post.alt" class="ig-post-image" loading="lazy">
+							<span class="ig-post-overlay">Ver en Instagram ↗</span>
+						</a>
+					}
+				</div>
+			</div>
+
+			<!-- YouTube -->
+			<div class="social-platform">
+				<div class="social-platform-header">
+					<h3 class="social-platform-title">
+						<span class="social-platform-icon">▶️</span>
+						YouTube
+					</h3>
+					@if (youtubeChannelUrl) {
+						<a class="social-platform-link" [href]="youtubeChannelUrl" target="_blank" rel="noopener">
+							Ver canal ↗
+						</a>
+					}
+				</div>
+				@if (youtubeVideoIds.length > 0) {
+					<div class="social-grid social-grid-youtube">
+						@for (videoId of youtubeVideoIds; track videoId) {
+							<div class="youtube-embed-wrapper">
+								<iframe
+									[src]="youtubeEmbedUrl(videoId)"
+									title="Video de YouTube — Estilo D' MuA"
+									frameborder="0"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen
+								></iframe>
+							</div>
+						}
+					</div>
+				} @else {
+					<p class="social-platform-pending">Muy pronto nuestros videos aquí 🎬</p>
+				}
+			</div>
 		</div>
 	</section>
+
+	<!-- ===== SECCIÓN CONTACTO ===== -->
+	<section id="contacto" class="contact-section">
+		<div class="contact-inner">
+
+			<!-- Encabezado -->
+			<div class="contact-header">
+				<span class="contact-tag">Escríbenos</span>
+				<h2 class="contact-title">¿Tienes alguna <em>pregunta</em>?</h2>
+				<p class="contact-subtitle">
+					Cuéntanos lo que necesitas. Respondemos en menos de 24 horas.
+				</p>
+			</div>
+
+			<div class="contact-layout">
+
+				<!-- Info lateral -->
+				<div class="contact-info">
+					<div class="contact-info-item">
+						<div class="contact-info-icon">📍</div>
+						<div>
+							<strong>Ubicación</strong>
+							<span>Linares y Parral, Chile</span>
+						</div>
+					</div>
+					<div class="contact-info-item">
+						<div class="contact-info-icon">📞</div>
+						<div>
+							<strong>Teléfono</strong>
+							<span>+56 9 1234 5678</span>
+						</div>
+					</div>
+					<div class="contact-info-item">
+						<div class="contact-info-icon">✉️</div>
+						<div>
+							<strong>Email</strong>
+							<span>contacto&#64;estilodemua.cl</span>
+						</div>
+					</div>
+					<div class="contact-info-item">
+						<div class="contact-info-icon">🕐</div>
+						<div>
+							<strong>Horario de atención</strong>
+							<span>Lun–Vie: 9:00 – 21:00</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Formulario -->
+				<div class="contact-form-card">
+
+					<!-- Estado success -->
+					@if (contactSent) {
+						<div class="contact-success">
+							<div class="contact-success-icon">✅</div>
+							<h3>¡Mensaje enviado!</h3>
+							<p>Gracias por contactarnos. Te responderemos pronto.</p>
+							<button class="contact-btn-reset" (click)="resetContact()">
+								Enviar otro mensaje
+							</button>
+						</div>
+					} @else {
+						<form [formGroup]="contactForm" (ngSubmit)="submitContact()" novalidate>
+
+							<div class="contact-row">
+								<div class="contact-field">
+									<label for="cf-name">Nombre <span class="required">*</span></label>
+									<input
+										id="cf-name"
+										type="text"
+										formControlName="name"
+										placeholder="Tu nombre completo"
+										[class.invalid]="isInvalid('name')"
+									>
+									@if (isInvalid('name')) {
+										<span class="field-error">El nombre es obligatorio</span>
+									}
+								</div>
+								<div class="contact-field">
+									<label for="cf-email">Email <span class="required">*</span></label>
+									<input
+										id="cf-email"
+										type="email"
+										formControlName="email"
+										placeholder="tu&#64;email.com"
+										[class.invalid]="isInvalid('email')"
+									>
+									@if (isInvalid('email') && contactForm.get('email')?.errors?.['required']) {
+										<span class="field-error">El email es obligatorio</span>
+									}
+									@if (isInvalid('email') && contactForm.get('email')?.errors?.['email']) {
+										<span class="field-error">Ingresa un email válido</span>
+									}
+								</div>
+							</div>
+
+							<div class="contact-field">
+								<label for="cf-phone">Teléfono <span class="optional">(opcional)</span></label>
+								<input
+									id="cf-phone"
+									type="tel"
+									formControlName="phone"
+									placeholder="+56 9 ···· ····"
+								>
+							</div>
+
+							<div class="contact-field">
+								<label for="cf-subject">Asunto <span class="required">*</span></label>
+								<select id="cf-subject" formControlName="subject" [class.invalid]="isInvalid('subject')">
+									<option value="" disabled>Selecciona un tema…</option>
+									<option value="info">Información de clases</option>
+									<option value="inscription">Inscripción</option>
+									<option value="pricing">Precios y tarifas</option>
+									<option value="schedule">Horarios</option>
+									<option value="other">Otro</option>
+								</select>
+								@if (isInvalid('subject')) {
+									<span class="field-error">Selecciona un asunto</span>
+								}
+							</div>
+
+							<div class="contact-field">
+								<label for="cf-message">Mensaje <span class="required">*</span></label>
+								<textarea
+									id="cf-message"
+									formControlName="message"
+									placeholder="Cuéntanos en qué podemos ayudarte…"
+									rows="5"
+									[class.invalid]="isInvalid('message')"
+								></textarea>
+								<div class="field-counter">
+									{{ contactForm.get('message')?.value?.length ?? 0 }} / 500
+								</div>
+								@if (isInvalid('message') && contactForm.get('message')?.errors?.['required']) {
+									<span class="field-error">El mensaje es obligatorio</span>
+								}
+								@if (isInvalid('message') && contactForm.get('message')?.errors?.['minlength']) {
+									<span class="field-error">Mínimo 10 caracteres</span>
+								}
+							</div>
+
+							<button
+								type="submit"
+								class="contact-submit"
+								[disabled]="contactSubmitting"
+							>
+								@if (contactSubmitting) {
+									<span class="contact-spinner"></span>
+									Enviando…
+								} @else {
+									<span>Enviar mensaje</span>
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+									</svg>
+								}
+							</button>
+
+						</form>
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== FOOTER ===== -->
+	<footer class="home-footer">
+		<div class="footer-inner">
+			<div class="footer-brand">
+				<span class="footer-logo">💃🕺</span>
+				<span class="footer-name">Estilo D' MuA</span>
+			</div>
+			<p class="footer-copy">© 2026 Academia de Baile Estilo D' MuA. Todos los derechos reservados.</p>
+			<nav class="footer-nav">
+				<a href="#nosotros">Nosotros</a>
+				<a href="#contacto">Contacto</a>
+				<a routerLink="/courses">Clases</a>
+				<a routerLink="/auth/register">Inscribirse</a>
+			</nav>
+		</div>
+		<div class="footer-credit">
+			Diseñado y desarrollado por
+			<a href="https://flowbit.cl" target="_blank" rel="noopener" class="flowbit-brand">
+				<span class="flowbit-logo" aria-hidden="true">
+					<svg viewBox="0 0 24 24" fill="none">
+						<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/>
+					</svg>
+				</span>
+				Flowbit
+			</a>
+			· <a href="https://flowbit.cl" target="_blank" rel="noopener">&#64;flowbit.cl</a>
+		</div>
+	</footer>
+
 </div>

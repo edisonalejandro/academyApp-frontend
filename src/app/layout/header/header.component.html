@@ -2,11 +2,7 @@
   <div class="header-container">
     <!-- Logo -->
     <div class="logo-section">
-      <div class="logo-icon">💃</div>
-      <div class="logo-text">
-        <span class="logo-title">NAKAMAS, RISAS</span>
-        <span class="logo-subtitle">& BAILE</span>
-      </div>
+      <img class="logo-image" src="assets/images/logo_nuevo.png" alt="Estilo D' MuA">
     </div>
 
     <!-- Navegación Desktop -->
@@ -19,35 +15,11 @@
           <span>Dashboard</span>
         </a>
       }
-      <a routerLink="/courses" routerLinkActive="active" class="nav-link">
-        <span>Clases</span>
-      </a>
-      @if (authService.isAdmin()) {
-        <button class="nav-link nav-menu-trigger" [matMenuTriggerFor]="usuariosMenu">
-          <span>Usuarios</span>
-          <mat-icon class="menu-arrow">expand_more</mat-icon>
-        </button>
-        <mat-menu #usuariosMenu="matMenu" class="header-submenu">
-          <button mat-menu-item routerLink="/usuarios/profesores">
-            <mat-icon>school</mat-icon>
-            <span>Profesores</span>
-          </button>
-          <button mat-menu-item routerLink="/usuarios/alumnos">
-            <mat-icon>groups</mat-icon>
-            <span>Alumnos</span>
-          </button>
-        </mat-menu>
-      }
-      <a routerLink="/catalog" routerLinkActive="active" class="nav-link nav-catalog">
-        <span>Catálogo</span>
-        @if (cartService.totalItems() > 0) {
-          <span class="nav-cart-badge">{{ cartService.totalItems() }}</span>
-        }
-      </a>
-      <a href="#nosotros" class="nav-link">
+      <!-- Clases, Usuarios y Catálogo ocultos temporalmente: landing sin backend (Opción A). Reactivar al conectar el backend. -->
+      <a href="#nosotros" (click)="goToSection($event, 'nosotros')" class="nav-link">
         <span>Nosotros</span>
       </a>
-      <a href="#contacto" class="nav-link">
+      <a href="#contacto" (click)="goToSection($event, 'contacto')" class="nav-link">
         <span>Contacto</span>
       </a>
     </nav>
@@ -65,15 +37,9 @@
           Cerrar Sesión
         </button>
       } @else {
-        <button class="btn-login" routerLink="/auth/login">
-          <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          Entrar
-        </button>
-        <button class="btn-register" routerLink="/auth/register">
-          Reservar Clase
-        </button>
+        <a class="btn-register" href="https://wa.me/56933842904" target="_blank" rel="noopener">
+          <span>Reservar Clase</span>
+        </a>
       }
     </div>
 
@@ -102,43 +68,14 @@
           Dashboard
         </a>
       }
-      <a routerLink="/courses" (click)="closeMenu()" class="mobile-nav-link">
-        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-        Clases
-      </a>
-      @if (authService.isAdmin()) {
-        <div class="mobile-submenu-header">USUARIOS</div>
-        <a routerLink="/usuarios/profesores" (click)="closeMenu()" class="mobile-nav-link submenu-item">
-          <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          Profesores
-        </a>
-        <a routerLink="/usuarios/alumnos" (click)="closeMenu()" class="mobile-nav-link submenu-item">
-          <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          Alumnos
-        </a>
-      }
-      <a routerLink="/catalog" (click)="closeMenu()" class="mobile-nav-link">
-        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-        </svg>
-        Catálogo
-        @if (cartService.totalItems() > 0) {
-          <span class="mobile-cart-badge">{{ cartService.totalItems() }}</span>
-        }
-      </a>
-      <a href="#nosotros" (click)="closeMenu()" class="mobile-nav-link">
+      <!-- Clases, Usuarios y Catálogo ocultos temporalmente: landing sin backend (Opción A). Reactivar al conectar el backend. -->
+      <a href="#nosotros" (click)="goToSection($event, 'nosotros')" class="mobile-nav-link">
         <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         Nosotros
       </a>
-      <a href="#contacto" (click)="closeMenu()" class="mobile-nav-link">
+      <a href="#contacto" (click)="goToSection($event, 'contacto')" class="mobile-nav-link">
         <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
@@ -153,12 +90,9 @@
             Cerrar Sesión
           </button>
         } @else {
-          <button class="mobile-btn-login" routerLink="/auth/login" (click)="closeMenu()">
-            Iniciar Sesión
-          </button>
-          <button class="mobile-btn-register" routerLink="/auth/register" (click)="closeMenu()">
+          <a class="mobile-btn-register" href="https://wa.me/56933842904" target="_blank" rel="noopener" (click)="closeMenu()">
             Reservar Clase
-          </button>
+          </a>
         }
       </div>
     </nav>
