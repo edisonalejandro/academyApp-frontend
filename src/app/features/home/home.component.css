@@ -1675,11 +1675,11 @@
   background: linear-gradient(135deg, rgba(255,107,53,0.3), rgba(247,193,115,0.2));
 }
 .teacher-card-body {
-  padding: 16px;
-  text-align: left;
+  padding: 20px;
+  text-align: center;
 }
 .teacher-card-name {
-  margin: 0 0 4px;
+  margin: 0 0 14px;
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
@@ -1697,9 +1697,11 @@
 }
 .teacher-card-bio {
   margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.12);
   font-size: 0.82rem;
   color: rgba(255,255,255,0.75);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 .teachers-loading {
   display: flex;
