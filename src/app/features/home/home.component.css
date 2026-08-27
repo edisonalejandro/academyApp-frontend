@@ -47,19 +47,10 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
-    url('/Banner1.png') center / cover no-repeat;
+  background: url('/Banner1.png') center / cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
-}
-
-.hero-crossfade-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.55) 100%);
   pointer-events: none;
 }
 
