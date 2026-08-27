@@ -1,8 +1,19 @@
 <header class="main-header">
   <div class="header-container">
     <!-- Logo -->
-    <div class="logo-section">
+    <div class="logo-section" (mouseenter)="onLogoHoverStart()" (mouseleave)="onLogoHoverEnd()">
       <img class="logo-image" src="assets/images/logo_nuevo.png" alt="Estilo D' MuA">
+      <div class="logo-video-wrap">
+        <video
+          #logoVideo
+          class="logo-video"
+          src="assets/videos/video_banner.mp4"
+          muted
+          loop
+          playsinline
+          preload="auto"
+        ></video>
+      </div>
     </div>
 
     <!-- Navegación Desktop -->

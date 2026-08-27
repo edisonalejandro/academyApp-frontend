@@ -37,6 +37,7 @@
 
 /* Logo Section */
 .logo-section {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -52,6 +53,42 @@
   height: 82px;
   width: auto;
   display: block;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+/* Video del logo (pareja bailando) — reemplaza al logo estático al pasar el mouse.
+   El mask/opacity van en el wrapper (div) y no en el <video> directamente porque
+   los navegadores componen el video en una capa aparte y varios efectos CSS
+   (mix-blend-mode, mask-image) no se aplican de forma confiable sobre <video>. */
+.logo-video-wrap {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 82px;
+  width: 247px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at center, black 38%, transparent 96%);
+  mask-image: radial-gradient(ellipse 60% 60% at center, black 38%, transparent 96%);
+}
+
+.logo-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #0a0a0a; /* mismo negro que el inicio del gradiente del header */
+}
+
+.logo-section:hover .logo-image {
+  opacity: 0;
+}
+
+.logo-section:hover .logo-video-wrap {
+  opacity: 1;
 }
 
 /* Navegación Desktop */
@@ -522,6 +559,11 @@
 
   .logo-image {
     height: 58px;
+  }
+
+  .logo-video-wrap {
+    height: 58px;
+    width: 175px;
   }
 
   .nav-desktop,

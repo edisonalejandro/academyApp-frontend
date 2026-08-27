@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
@@ -17,8 +17,24 @@ export class HeaderComponent {
   private router = inject(Router);
   public authService = inject(AuthService);
   public cartService = inject(CartService);
-  
+
+  @ViewChild('logoVideo') logoVideoRef?: ElementRef<HTMLVideoElement>;
+
   isMenuOpen = false;
+
+  onLogoHoverStart() {
+    const video = this.logoVideoRef?.nativeElement;
+    if (!video) return;
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  }
+
+  onLogoHoverEnd() {
+    const video = this.logoVideoRef?.nativeElement;
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
