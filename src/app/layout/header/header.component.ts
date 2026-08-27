@@ -35,6 +35,18 @@ export class HeaderComponent {
     document.body.style.overflow = 'auto';
   }
 
+  goToSection(event: Event, sectionId: string) {
+    this.closeMenu();
+    // Si ya estamos en Home, dejamos que el navegador haga el scroll nativo al ancla.
+    if (this.router.url === '/' || this.router.url.startsWith('/#')) {
+      return;
+    }
+    // Desde otra ruta, navegamos por el Router para que Home se recree desde cero
+    // (video siempre silenciado) y luego hacemos scroll a la sección.
+    event.preventDefault();
+    this.router.navigate(['/'], { fragment: sectionId });
+  }
+
   logout() {
     this.authService.logout().subscribe({
       next: () => {

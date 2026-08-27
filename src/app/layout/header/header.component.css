@@ -8,7 +8,7 @@
   --color-gray: #333333;
   --color-light-gray: #e5e5e5;
   --color-white: #ffffff;
-  --color-accent: #d4af37; /* Dorado para acentos */
+  --color-accent: #c8973a; /* Dorado de marca — mismo tono que el hero y "explorar" del Home */
   --header-height: 80px;
 }
 
@@ -21,7 +21,6 @@
   z-index: 1000;
   background: linear-gradient(135deg, var(--color-black) 0%, var(--color-dark-gray) 100%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
   border-bottom: 2px solid var(--color-primary);
 }
 
@@ -49,42 +48,10 @@
   transform: scale(1.05);
 }
 
-.logo-icon {
-  font-size: 2.5rem;
-  filter: drop-shadow(0 0 10px var(--color-primary));
-  animation: dance 3s ease-in-out infinite;
-}
-
-@keyframes dance {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.logo-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-white);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.logo-subtitle {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-accent);
-  letter-spacing: 2px;
-  text-transform: uppercase;
+.logo-image {
+  height: 64px;
+  width: auto;
+  display: block;
 }
 
 /* Navegación Desktop */
@@ -104,8 +71,15 @@
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.5px;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease,
+              transform var(--duration-beat) var(--ease-beat);
   border-radius: 8px;
+}
+
+.nav-link:active {
+  transform: scale(0.94);
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-press);
 }
 
 .nav-link span {
@@ -198,7 +172,10 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform var(--duration-beat) var(--ease-beat),
+              box-shadow var(--duration-glide) var(--ease-glide),
+              background-color var(--duration-glide) var(--ease-glide),
+              border-color var(--duration-glide) var(--ease-glide);
 }
 
 .btn-login:hover,
@@ -206,6 +183,13 @@
   background: var(--color-primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(45, 90, 61, 0.4);
+}
+
+.btn-login:active,
+.btn-logout:active {
+  transform: scale(0.96);
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-press);
 }
 
 .btn-logout {
@@ -227,8 +211,11 @@
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(45, 90, 61, 0.3);
+  /* Second box-shadow layer is the "beat" ring: invisible but already
+     spread at rest, contracts to a tight glow on press, then blooms back
+     outward on release along --ease-beat. */
+  transition: transform var(--duration-beat) var(--ease-beat), box-shadow var(--duration-beat) var(--ease-beat);
+  box-shadow: 0 4px 15px rgba(45, 90, 61, 0.3), 0 0 0 16px rgba(200, 151, 58, 0);
   position: relative;
   overflow: hidden;
 }
@@ -244,7 +231,14 @@
 
 .btn-register:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(45, 90, 61, 0.5);
+  box-shadow: 0 6px 20px rgba(45, 90, 61, 0.5), 0 0 0 16px rgba(200, 151, 58, 0);
+}
+
+.btn-register:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 15px rgba(45, 90, 61, 0.3), 0 0 0 0 rgba(200, 151, 58, 0.6);
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-press);
 }
 
 .btn-register:hover::before {
@@ -273,6 +267,13 @@
   cursor: pointer;
   padding: 5px;
   z-index: 1001;
+  transition: transform var(--duration-glide) var(--ease-glide);
+}
+
+.menu-toggle:active {
+  transform: scale(0.9);
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-press);
 }
 
 .hamburger {
@@ -307,7 +308,9 @@
   bottom: 0;
   background: linear-gradient(180deg, var(--color-black) 0%, var(--color-dark-gray) 100%);
   transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* Decelerate ease, no overshoot: this opens on a tap, not a flick — a
+     bouncy curve here reads as a glitch, not momentum (it wasn't carrying any). */
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
   overflow-y: auto;
   z-index: 999;
 }
@@ -383,7 +386,9 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform var(--duration-beat) var(--ease-beat),
+              box-shadow var(--duration-glide) var(--ease-glide),
+              background-color var(--duration-glide) var(--ease-glide);
 }
 
 .mobile-btn-login {
@@ -394,6 +399,14 @@
 
 .mobile-btn-login:hover {
   background: var(--color-primary);
+}
+
+.mobile-btn-login:active,
+.mobile-btn-register:active,
+.mobile-btn-logout:active {
+  transform: scale(0.97);
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-press);
 }
 
 .mobile-btn-logout {
@@ -420,12 +433,18 @@
   gap: 0.25rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color var(--duration-glide) var(--ease-glide), transform var(--duration-beat) var(--ease-beat);
   position: relative;
 }
 
 .nav-menu-trigger:hover {
   color: var(--color-primary);
+}
+
+.nav-menu-trigger:active {
+  transform: scale(0.96);
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-press);
 }
 
 .nav-menu-trigger::after {
@@ -500,12 +519,8 @@
     padding: 0 1.5rem;
   }
 
-  .logo-text {
-    display: none;
-  }
-
-  .logo-icon {
-    font-size: 2rem;
+  .logo-image {
+    height: 48px;
   }
 
   .nav-desktop,
